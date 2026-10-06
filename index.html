@@ -2744,6 +2744,7 @@ $('mdCopiar').addEventListener('click', () => {
 // ---------- arquivos: só ativa se estiverem publicados junto ----------
 fetch(S.arquivoTeste, { method: 'HEAD' }).then(r => { if (!r.ok) throw 0; }).catch(() => {
   document.querySelectorAll('.card[data-arquivo]').forEach(c => { c.setAttribute('aria-disabled', 'true'); c.removeAttribute('href'); });
+  $('mdBaixar').hidden = true;   // fora do GitHub Pages o download não está disponível; copiar continua funcionando
   $('notaArquivos').hidden = false;
 });
 
