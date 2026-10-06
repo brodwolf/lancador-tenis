@@ -20,7 +20,8 @@ Máquina de treino com duas rodas de velocidade independente para controlar o sp
 
 | Pasta | Conteúdo |
 | --- | --- |
-| `index.html`, `assets/` | Página de apresentação com o modelo 3D interativo (GitHub Pages) |
+| `index.html`, `assets/` | Página de apresentação com o modelo 3D interativo e a simulação na quadra (GitHub Pages) |
+| `PROJETO.md` | Memorial técnico em Markdown (sem preços e sem próximos passos) |
 | `cad/montagem/` | Montagem completa em STEP (Fusion 360, FreeCAD, Onshape, SolidWorks) |
 | `cad/impressao_3d/` | STL e STEP das 32 peças impressas |
 | `cad/corte_laser/` | DXF das 13 chapas (mm, 1:1) e pranchas em PDF |

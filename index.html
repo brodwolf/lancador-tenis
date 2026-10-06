@@ -27,6 +27,7 @@
   --ball: #cfe02c;         /* amarelo-óptico */
   --ball-ink: #1d2400;
   --warn: #b5470b;
+  --warn-ink: #ffffff;
   --d-edge: #7e8a97; --d-grid: #c3ccd5; --d-muted: #9aa5b1; --d-tint: #dbe4ed;
   --c-impresso: #d9661f; --c-laser: #3a7cb8; --c-perfil: #7d8893; --c-comprado: #3e4751; --c-usinado: #9a7434;
   --f-display: "Saira Semi Condensed", "Arial Narrow", system-ui, sans-serif;
@@ -36,7 +37,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0e141a; --surface: #141b23; --stage: #10171e; --ink: #e4e9ef; --muted: #97a3af; --line: #27313b;
-    --accent: #6ea6dc; --accent-ink: #0b1622; --ball: #d6e64a; --ball-ink: #1d2400; --warn: #f0894a;
+    --accent: #6ea6dc; --accent-ink: #0b1622; --ball: #d6e64a; --ball-ink: #1d2400; --warn: #f0894a; --warn-ink: #1a0d03;
     --d-edge: #7c8894; --d-grid: #2e3842; --d-muted: #5d6975; --d-tint: #1c2733;
     --c-impresso: #f08a45; --c-laser: #64a3dc; --c-perfil: #9aa5b0; --c-comprado: #b9c2cc; --c-usinado: #c79b55;
     color-scheme: dark;
@@ -44,7 +45,7 @@
 }
 :root[data-theme="dark"] {
   --bg: #0e141a; --surface: #141b23; --stage: #10171e; --ink: #e4e9ef; --muted: #97a3af; --line: #27313b;
-  --accent: #6ea6dc; --accent-ink: #0b1622; --ball: #d6e64a; --ball-ink: #1d2400; --warn: #f0894a;
+  --accent: #6ea6dc; --accent-ink: #0b1622; --ball: #d6e64a; --ball-ink: #1d2400; --warn: #f0894a; --warn-ink: #1a0d03;
   --d-edge: #7c8894; --d-grid: #2e3842; --d-muted: #5d6975; --d-tint: #1c2733;
   --c-impresso: #f08a45; --c-laser: #64a3dc; --c-perfil: #9aa5b0; --c-comprado: #b9c2cc; --c-usinado: #c79b55;
   color-scheme: dark;
@@ -199,6 +200,50 @@ code { font-family: var(--f-mono); font-size: .92em; }
 .nota-arquivos { font-size: 13px; color: var(--warn); }
 footer { margin-top: 40px; font-size: 12.5px; color: var(--muted); }
 
+/* ---------- zoom ---------- */
+.zoom { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: grid; gap: 4px; }
+.zoom button { width: 34px; height: 34px; padding: 0; display: grid; place-items: center; font: 500 18px/1 var(--f-mono); color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+.zoom button:hover { border-color: var(--accent); }
+
+/* ---------- quadra ---------- */
+.placar { grid-column: 1 / -1; display: grid; gap: 6px; padding-bottom: 9px; border-bottom: 1px solid var(--line); font-size: 12.5px; line-height: 1.35; }
+.placar-topo { display: flex; align-items: center; gap: 6px 12px; flex-wrap: wrap; min-height: 26px; }
+.placar-topo .mono { font-size: 12px; color: var(--muted); }
+.selo { font: 600 13.5px/1 var(--f-display); letter-spacing: .03em; padding: 6px 10px; border-radius: 999px; background: var(--ball); color: var(--ball-ink); }
+.selo.mal { background: var(--warn); color: var(--warn-ink); }
+.placar dl { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 24px; }
+.placar dl > div { white-space: nowrap; }
+.placar dl > div { min-width: 0; }
+.placar dt { color: var(--muted); font-size: 11.5px; }
+.placar dd { margin: 0; font: 500 13px/1.4 var(--f-body); font-variant-numeric: tabular-nums; }
+.placar dd.alerta { color: var(--warn); }
+.placar .nota { margin: 0 0 0 auto; color: var(--muted); font-size: 12px; text-align: right; }
+.legenda-mapa { display: flex; gap: 4px 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.legenda-mapa i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+.qctl .ctl output { min-width: 4.6em; }
+.ctl label .curto { display: none; }
+.linha select { font: 500 12.5px var(--f-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.linha .lancar { margin-left: auto; padding: 8px 16px; font-size: 13.5px; }
+.qctl .tiros { margin-left: 0; }
+
+/* ---------- leitor do markdown ---------- */
+.acoes button { font: 600 14px/1 var(--f-display); letter-spacing: .03em; padding: 11px 16px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink); background: transparent; cursor: pointer; }
+.acoes a:hover, .acoes button:hover { border-color: var(--accent); }
+dialog.leitor { width: min(920px, calc(100vw - 32px)); height: min(860px, calc(100dvh - 48px)); padding: 0; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--surface); color: var(--ink); }
+dialog.leitor[open] { display: grid; grid-template-rows: auto minmax(0, 1fr); }
+dialog.leitor::backdrop { background: rgba(8, 12, 16, .6); }
+.leitor-cab { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.leitor-cab h2 { margin: 0 auto 0 0; font: 600 19px/1.2 var(--f-display); }
+.leitor-cab p { order: 3; flex-basis: 100%; margin: 0; font-size: 12.5px; color: var(--muted); }
+.leitor-acoes { display: flex; flex-wrap: wrap; gap: 6px; }
+.leitor-acoes a, .leitor-acoes button { font: 500 12.5px/1 var(--f-body); padding: 8px 11px; border-radius: 6px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--ink); text-decoration: none; cursor: pointer; }
+.leitor-acoes a:hover, .leitor-acoes button:hover { border-color: var(--accent); }
+.leitor-acoes .principal { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.leitor pre { margin: 0; overflow: auto; padding: 16px 18px; font: 12.5px/1.6 var(--f-mono); white-space: pre-wrap; overflow-wrap: anywhere; background: var(--bg); tab-size: 2; }
+
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @media (max-width: 1000px) {
@@ -206,6 +251,12 @@ footer { margin-top: 40px; font-size: 12.5px; color: var(--muted); }
   .layout { grid-template-columns: 1fr; }
   .palco { position: relative; height: 68vh; height: 68dvh; border-right: 0; border-bottom: 1px solid var(--line); }
   .controles { grid-template-columns: 1fr; }
+  .controles.qctl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; padding: 8px 10px; }
+  .palco.em-quadra { height: 88vh; height: 88dvh; }
+  .placar .largo { display: none; }
+  .placar dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .placar dl > div { white-space: normal; }
+  .placar .nota { margin-left: 0; text-align: left; flex-basis: 100%; }
   .ficha { top: auto; bottom: 150px; }
   .memorial { padding-block: 28px 48px; }
   .indice { margin-top: 20px; }
@@ -214,7 +265,14 @@ footer { margin-top: 40px; font-size: 12.5px; color: var(--muted); }
   .abas .marca span { display: none; }
   .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tiros { margin-left: 0; }
+  .ctl label .longo { display: none; }
+  .ctl label .curto { display: inline; }
+  .qctl .ctl { gap: 6px; }
+  .qctl .ctl output { min-width: 4em; font-size: 11.5px; }
+  .vistas button { padding: 7px 8px; }
 }
+@media (max-width: 520px) { .placar dl { grid-template-columns: repeat(2, minmax(0, 1fr)); } .placar dl > div:last-child { grid-column: 1 / -1; } }
+@media (pointer: coarse) { .zoom { display: none; } }
 @media (prefers-reduced-motion: reduce) { details.grupo > summary .seta { transition: none; } }
 </style>
 
@@ -233,6 +291,7 @@ footer { margin-top: 40px; font-size: 12.5px; color: var(--muted); }
     <div class="abas" role="tablist" aria-label="Visualização">
       <div class="marca"><i></i><span>Lançador de Bolas</span></div>
       <button type="button" role="tab" id="tab-3d" aria-selected="true" aria-controls="p-3d">Modelo 3D</button>
+      <button type="button" role="tab" id="tab-quadra" aria-selected="false" aria-controls="p-quadra">Quadra</button>
       <button type="button" role="tab" id="tab-img" aria-selected="false" aria-controls="p-img">Imagens</button>
       <button type="button" role="tab" id="tab-conc" aria-selected="false" aria-controls="p-conc">Conceito</button>
     </div>
@@ -246,6 +305,7 @@ footer { margin-top: 40px; font-size: 12.5px; color: var(--muted); }
         <button type="button" data-vista="tras">Trás</button>
         <button type="button" data-vista="cabeca">Cabeça</button>
       </div>
+      <div class="zoom" role="group" aria-label="Zoom"><button type="button" data-zoom="mais" aria-label="Aproximar">+</button><button type="button" data-zoom="menos" aria-label="Afastar">−</button></div>
       <div class="aviso" id="aviso" hidden><span id="avisoTxt"></span><button type="button" id="limpar">Limpar</button></div>
       <div class="ficha" id="ficha" hidden aria-live="polite"></div>
       <div class="carregando" id="carregando"><div><strong>Carregando o modelo</strong><span id="cargaTxt">0 %</span><div class="barra"><i id="cargaBarra"></i></div></div></div>
@@ -261,6 +321,51 @@ footer { margin-top: 40px; font-size: 12.5px; color: var(--muted); }
             <button type="button" class="tiro principal" data-tiro="topspin" disabled>Topspin</button>
             <button type="button" class="tiro" data-tiro="slice" disabled>Slice</button>
           </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="painel" id="p-quadra" role="tabpanel" aria-labelledby="tab-quadra" hidden>
+      <div class="vistas" role="group" aria-label="Câmeras da quadra">
+        <button type="button" data-qvista="geral">Geral</button>
+        <button type="button" data-qvista="atras">Atrás</button>
+        <button type="button" data-qvista="cima">De cima</button>
+        <button type="button" data-qvista="lado">Lateral</button>
+        <button type="button" data-qvista="recebedor">Recebedor</button>
+      </div>
+      <div class="zoom" role="group" aria-label="Zoom"><button type="button" data-zoom="mais" aria-label="Aproximar">+</button><button type="button" data-zoom="menos" aria-label="Afastar">−</button></div>
+      <div class="carregando" id="qCarregando"><div><strong>Carregando o modelo</strong><span>a quadra abre em seguida</span></div></div>
+      <div class="controles qctl">
+        <section class="placar" id="placar" aria-label="Resultado do lançamento" aria-live="polite">
+          <div class="placar-topo"><span class="selo" id="qSelo">Calculando</span><span class="mono" id="qTempo"></span>
+            <span class="legenda-mapa" id="qLegenda" hidden><span><i style="background:#d6e64a"></i>dentro</span><span><i style="background:#f0894a"></i>fora</span><span><i style="background:#8b96a1"></i>rede ou curta</span></span>
+            <p class="nota" id="qNota">Toque na quadra do outro lado da rede para mirar.</p></div>
+          <dl>
+            <div><dt>1º quique, da rede</dt><dd id="qQ1">—</dd></div>
+            <div><dt>Folga na rede</dt><dd id="qRede">—</dd></div>
+            <div class="largo"><dt>No quique (vel., ângulo)</dt><dd id="qQuique">—</dd></div>
+            <div class="largo"><dt>Depois do quique</dt><dd id="qDepois">—</dd></div>
+            <div><dt>Rodas, rpm (cima / baixo)</dt><dd id="qRodas">—</dd></div>
+          </dl>
+        </section>
+        <div class="ctl"><label for="qv"><span class="longo">Velocidade</span><span class="curto">Vel.</span></label><input id="qv" type="range" min="30" max="120" step="1" value="80"><output id="qvv">80 km/h</output></div>
+        <div class="ctl"><label for="qs" title="rpm; positivo = topspin, negativo = slice"><span class="longo">Spin</span><span class="curto">Spin</span></label><input id="qs" type="range" min="-2500" max="3000" step="100" value="1500"><output id="qsv">+1.500</output></div>
+        <div class="ctl"><label for="qp" title="positivo = para a direita, visto de trás da máquina"><span class="longo">Giro</span><span class="curto">Giro</span></label><input id="qp" type="range" min="-30" max="30" step="0.1" value="0"><output id="qpv">0°</output></div>
+        <div class="ctl"><label for="qt"><span class="longo">Inclinação</span><span class="curto">Incl.</span></label><input id="qt" type="range" min="-15" max="15" step="0.1" value="10"><output id="qtv">+10°</output></div>
+        <div class="linha">
+          <label>Máquina <select id="qPos"><option value="saque">na linha de saque</option><option value="fundo">na linha de fundo</option></select></label>
+          <select id="qLado" aria-label="Posição lateral da máquina"><option value="0">no centro</option><option value="-2.5">à esquerda</option><option value="2.5">à direita</option></select>
+          <label>Piso <select id="qPiso"><option value="rapida">rápida</option><option value="saibro">saibro</option></select></label>
+          <label><input type="checkbox" id="qMapa"> Alcance</label>
+          <label><input type="checkbox" id="qLento"> Lento</label>
+        </div>
+        <div class="linha">
+          <span class="tiros" role="group" aria-label="Tipos de bola">
+            <button type="button" class="tiro" data-qtiro="drive" disabled>Drive</button>
+            <button type="button" class="tiro" data-qtiro="topspin" disabled>Topspin</button>
+            <button type="button" class="tiro" data-qtiro="slice" disabled>Slice</button>
+          </span>
+          <button type="button" class="tiro principal lancar" id="qLancar" disabled>Lançar</button>
         </div>
       </div>
     </div>
@@ -287,7 +392,8 @@ footer { margin-top: 40px; font-size: 12.5px; color: var(--muted); }
       </ul>
       <div class="acoes">
         <a class="principal" href="#arquivos">Arquivos 3D e de corte</a>
-        <a href="#g-materiais">Lista de materiais</a>
+        <a href="#quadra" id="irQuadra">Simular na quadra</a>
+        <button type="button" id="abrirMd">Projeto em Markdown</button>
         <a id="linkRepo" href="#" hidden>Repositório no GitHub</a>
       </div>
     </header>
@@ -562,7 +668,108 @@ footer { margin-top: 40px; font-size: 12.5px; color: var(--muted); }
 </tr>
 </tbody>
 </table></div>
-<p>São estimativas. O firmware mede a tensão de cada bateria; com um sensor de corrente opcional (INA226) você mede o consumo real.</p></section></div></details>
+<p>São estimativas. O firmware mede a tensão de cada bateria; com um sensor de corrente opcional (INA226) você mede o consumo real.</p>
+<h4>3.5 Trajetória e simulação na quadra</h4>
+<p>A aba <strong>Quadra</strong>, ao lado do modelo 3D, mostra onde a bola quica. A máquina fica com a frente encostada na linha de saque (ou na linha de fundo) e a bola sai do ponto de contato das rodas, a ~0,72 m do chão, na direção dada pelo giro e pela inclinação. Também dá para tocar num ponto da quadra adversária: a página calcula o giro e a inclinação para a bola quicar ali.</p>
+<p><button type="button" class="focar" data-quadra>Abrir a simulação na quadra</button></p>
+<p>Em voo, a bola sofre o peso, o arrasto do ar e a força de Magnus causada pelo spin:</p>
+<div class="formula"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>m</mi><mtext> </mtext><mfrac><mrow><mi>d</mi><mover accent="true"><mi>v</mi><mo>⃗</mo></mover></mrow><mrow><mi>d</mi><mi>t</mi></mrow></mfrac><mo>=</mo><mi>m</mi><mtext> </mtext><mover accent="true"><mi>g</mi><mo>⃗</mo></mover><mtext>  </mtext><mo>−</mo><mtext>  </mtext><mstyle displaystyle="false" scriptlevel="0"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mtext> </mtext><mi>ρ</mi><mi>A</mi><mtext> </mtext><msub><mi>C</mi><mi>D</mi></msub><mtext> </mtext><mi mathvariant="normal">∣</mi><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mi mathvariant="normal">∣</mi><mtext> </mtext><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><mtext>  </mtext><mo>+</mo><mtext>  </mtext><mstyle displaystyle="false" scriptlevel="0"><mfrac><mn>1</mn><mn>2</mn></mfrac></mstyle><mtext> </mtext><mi>ρ</mi><mi>A</mi><mtext> </mtext><msub><mi>C</mi><mi>L</mi></msub><mtext> </mtext><mi mathvariant="normal">∣</mi><mover accent="true"><mi>v</mi><mo>⃗</mo></mover><msup><mi mathvariant="normal">∣</mi><mn>2</mn></msup><mtext> </mtext><mo stretchy="false">(</mo><mover accent="true"><mi>ω</mi><mo>^</mo></mover><mo>×</mo><mover accent="true"><mi>v</mi><mo>^</mo></mover><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">m\,\frac{d\vec v}{dt} = m\,\vec g \;-\; \tfrac{1}{2}\,\rho A\,C_D\,|\vec v|\,\vec v \;+\; \tfrac{1}{2}\,\rho A\,C_L\,|\vec v|^2\,(\hat\omega \times \hat v)</annotation></semantics></math></span></div>
+<p>Os coeficientes vêm do ajuste empírico de Goodwill, Chin e Haake (2004), medido em túnel de vento com bolas girando, em função da razão entre a velocidade da bola, v, e a velocidade periférica do spin, v_s = r·ω:</p>
+<div class="formula"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>C</mi><mi>D</mi></msub><mo>=</mo><mn>0</mn><mo separator="true" lspace="0em" rspace="0em">,</mo><mn>55</mn><mo>+</mo><mfrac><mn>1</mn><msup><mrow><mo fence="true">[</mo><mtext> </mtext><mn>22</mn><mo separator="true" lspace="0em" rspace="0em">,</mo><mn>5</mn><mo>+</mo><mn>4</mn><mo separator="true" lspace="0em" rspace="0em">,</mo><mn>2</mn><mtext> </mtext><mo stretchy="false">(</mo><mi>v</mi><mi mathvariant="normal">/</mi><msub><mi>v</mi><mi>s</mi></msub><msup><mo stretchy="false">)</mo><mrow><mn>2</mn><mo separator="true" lspace="0em" rspace="0em">,</mo><mn>5</mn></mrow></msup><mo fence="true">]</mo></mrow><mrow><mn>0</mn><mo separator="true" lspace="0em" rspace="0em">,</mo><mn>4</mn></mrow></msup></mfrac><mspace width="2em"/><msub><mi>C</mi><mi>L</mi></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mo>+</mo><mi>v</mi><mi mathvariant="normal">/</mi><msub><mi>v</mi><mi>s</mi></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">C_D = 0{,}55 + \frac{1}{\left[\,22{,}5 + 4{,}2\,(v/v_s)^{2{,}5}\right]^{0{,}4}} \qquad C_L = \frac{1}{2 + v/v_s}</annotation></semantics></math></span></div>
+<p>No quique, a velocidade vertical volta multiplicada pelo coeficiente de restituição e, e o atrito freia o ponto de contato até a bola parar de escorregar e começar a rolar (modelo de R. Cross). O mesmo atrito muda o spin: o topspin sai do quique mais rápido para a frente, e o slice freia e fica baixo.</p>
+<div class="formula"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msubsup><mi>v</mi><mi>y</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msubsup><mo>=</mo><mo>−</mo><mi>e</mi><mtext> </mtext><msub><mi>v</mi><mi>y</mi></msub><mspace width="2em"/><msub><mi>J</mi><mi>t</mi></msub><mo>=</mo><mi>min</mi><mo>⁡</mo><mtext> ⁣</mtext><mrow><mo fence="true">(</mo><mi>μ</mi><mtext> </mtext><mo stretchy="false">(</mo><mn>1</mn><mo>+</mo><mi>e</mi><mo stretchy="false">)</mo><mtext> </mtext><mi mathvariant="normal">∣</mi><msub><mi>v</mi><mi>y</mi></msub><mi mathvariant="normal">∣</mi><mo separator="true">,</mo><mtext>  </mtext><mfrac><mi>α</mi><mrow><mn>1</mn><mo>+</mo><mi>α</mi></mrow></mfrac><mtext> </mtext><mi mathvariant="normal">∣</mi><msub><mi>u</mi><mi>c</mi></msub><mi mathvariant="normal">∣</mi><mo fence="true">)</mo></mrow><mspace width="2em"/><mi>I</mi><mo>=</mo><mi>α</mi><mtext> </mtext><mi>m</mi><mtext> </mtext><msup><mi>r</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">v_y&#x27; = -e\,v_y \qquad J_t = \min\!\left(\mu\,(1+e)\,|v_y|,\; \frac{\alpha}{1+\alpha}\,|u_c|\right) \qquad I = \alpha\, m\, r^2</annotation></semantics></math></span></div>
+<p>Onde u_c é a velocidade do ponto de contato com o chão e J_t é o impulso de atrito por unidade de massa. A trajetória é integrada por Runge‑Kutta de 4ª ordem com passo de 2 ms.</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Parâmetro</th>
+<th>Valor usado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bola</td>
+<td>57 g, Ø67 mm, α = 0,55</td>
+</tr>
+<tr>
+<td>Ar</td>
+<td>ρ = 1,21 kg/m³ (nível do mar, 20 °C), sem vento</td>
+</tr>
+<tr>
+<td>Quadra rápida</td>
+<td>e = 0,78, μ = 0,65</td>
+</tr>
+<tr>
+<td>Saibro</td>
+<td>e = 0,80, μ = 0,80</td>
+</tr>
+<tr>
+<td>Rede</td>
+<td>0,914 m no centro, 1,07 m nos postes</td>
+</tr>
+<tr>
+<td>Bola dentro</td>
+<td>1º quique na quadra de simples do adversário; a linha conta como dentro</td>
+</tr>
+</tbody>
+</table></div>
+<p>Inclinação que põe o 1º quique dentro e onde ele cai (distância depois da rede), em quadra rápida, com a máquina no centro:</p>
+<div class="tabela"><table>
+<thead>
+<tr>
+<th>Bola</th>
+<th>Velocidade e spin</th>
+<th>Da linha de saque</th>
+<th>Da linha de fundo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aquecimento</td>
+<td>40 km/h, sem spin</td>
+<td>não alcança (pede +18,8°)</td>
+<td>não passa a rede</td>
+</tr>
+<tr>
+<td>Voleio</td>
+<td>60 km/h, sem spin</td>
+<td>+9,1° a +15° → 4,3–7,4 m</td>
+<td>não alcança (pede +16°)</td>
+</tr>
+<tr>
+<td>Drive plano</td>
+<td>80 km/h, sem spin</td>
+<td>+5,9° a +11,8° → 6,6–11,8 m</td>
+<td>+9,2° a +15° → 4,1–8,9 m</td>
+</tr>
+<tr>
+<td>Topspin médio</td>
+<td>80 km/h, +1.500 rpm</td>
+<td>+7,2° a +15° → 5,4–10,7 m</td>
+<td>+11,8° a +15° → 3,1–5,2 m</td>
+</tr>
+<tr>
+<td>Slice</td>
+<td>70 km/h, −1.500 rpm</td>
+<td>+6,1° a +14,3° → 6,1–11,8 m</td>
+<td>+9,9° a +15° → 3,5–6,8 m</td>
+</tr>
+<tr>
+<td>Topspin pesado</td>
+<td>90 km/h, +2.500 rpm</td>
+<td>+6,6° a +14,7° → 5,8–11,9 m</td>
+<td>+10,7° a +15° → 3,5–6,6 m</td>
+</tr>
+<tr>
+<td>Bola rápida plana</td>
+<td>120 km/h, sem spin</td>
+<td>+3,7° a +3,9° → 11,5–11,9 m</td>
+<td>+4,7° a +6,9° → 7,9–11,7 m</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>O que isso diz sobre o projeto:</strong> da linha de saque, de 70–80 km/h para cima a máquina põe a bola em qualquer profundidade, da área de saque até perto da linha de fundo; a 60 km/h ela chega a ~7 m da rede. Da linha de fundo, com o limite de +15°, o topspin médio cai no máximo a ~5 m da rede e bolas de 60 km/h ou menos não passam. O aquecimento a 40 km/h pede ~+19° mesmo da linha de saque. Isso reforça a evolução do tilt para +30° (seção 1, item 10): ela serve para lobs, para bolas lentas e para treinar da linha de fundo.</p>
+<p>São aproximações. Bola gasta, altitude (em São Paulo o ar é ~7% menos denso, e a bola vai um pouco mais longe), vento e os valores reais de η e k mudam o quique em alguns decímetros. A calibração do protótipo (seção 19) acerta os números.</p></section></div></details>
 <details class="grupo" id="g-arquitetura"><summary><span class="n">03</span><h2>Arquitetura e estrutura</h2><span class="seta" aria-hidden="true"></span><p>Como as partes se organizam e a estrutura de perfis</p></summary><div class="corpo"><section id="s4"><div class="cab"><h3>4. Arquitetura e cotas</h3><button type="button" class="focar" data-foco="geral">Ver no modelo</button></div><p>A linha da bola fica a 720 mm do chão, e por ela passam os dois eixos: o pan (vertical, pelo berço) e o tilt (horizontal, pelo mesmo ponto).</p>
 <figure class="diagrama"><svg viewBox="0 0 760 644" role="img" aria-label="Só a cabeça se move; hopper, eletrônica e baterias ficam fixos" font-size="12.5"><defs><marker id="d1-arch-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--accent)"></path></marker></defs><text x="24" y="28" font-size="15" font-weight="600" fill="var(--ink)">Só a cabeça se move; hopper, eletrônica e baterias ficam fixos</text><text x="24" y="48" font-size="11.5" fill="var(--muted)">Vista lateral, frente à direita; alturas em mm a partir do chão</text><g fill="none" stroke="var(--d-edge)" stroke-width="1.25"><rect x="200" y="284.75" width="202.5" height="13.5" stroke="var(--d-grid)"></rect><rect x="200" y="170" width="202.5" height="13.5"></rect><rect x="200" y="414.35" width="202.5" height="13.5"></rect><rect x="200" y="561.5" width="202.5" height="13.5"></rect><rect x="200" y="170" width="13.5" height="405"></rect><rect x="389" y="170" width="13.5" height="405"></rect></g><g><rect x="200" y="71" width="202.5" height="99" rx="4" fill="none" stroke="var(--d-edge)" stroke-width="1.25"></rect><circle cx="226" cy="140" r="13" fill="var(--d-muted)" fill-opacity="0.35"></circle><circle cx="256" cy="140" r="13" fill="var(--d-muted)" fill-opacity="0.35"></circle><circle cx="316" cy="140" r="13" fill="var(--d-muted)" fill-opacity="0.35"></circle><circle cx="346" cy="140" r="13" fill="var(--d-muted)" fill-opacity="0.35"></circle><circle cx="376" cy="140" r="13" fill="var(--d-muted)" fill-opacity="0.35"></circle><circle cx="241" cy="113" r="13" fill="var(--d-muted)" fill-opacity="0.35"></circle><circle cx="271" cy="113" r="13" fill="var(--d-muted)" fill-opacity="0.35"></circle><circle cx="331" cy="113" r="13" fill="var(--d-muted)" fill-opacity="0.35"></circle><circle cx="361" cy="113" r="13" fill="var(--d-muted)" fill-opacity="0.35"></circle><rect x="232" y="160" width="140" height="5" fill="none" stroke="var(--d-edge)" stroke-width="1"></rect></g><g><rect x="257.4" y="170" width="33.7" height="94.5" fill="none" stroke="var(--d-edge)" stroke-width="1.25"></rect></g><g><rect x="202" y="403.1" width="144.5" height="3.6" fill="none" stroke="var(--d-edge)" stroke-width="1"></rect><rect x="206.5" y="406.7" width="135.5" height="5.8" fill="var(--d-tint)" stroke="var(--d-edge)" stroke-width="1"></rect><rect x="200" y="412.54999999999995" width="202.5" height="2" fill="var(--d-edge)"></rect></g><g><rect x="254" y="207" width="134" height="177" rx="8" fill="var(--accent)" fill-opacity="0.12" stroke="var(--accent)" stroke-width="2"></rect><circle cx="346.25" cy="249.64999999999998" r="33.75" fill="none" stroke="var(--d-edge)" stroke-width="1.25"></circle><circle cx="346.25" cy="342.34999999999997" r="33.75" fill="none" stroke="var(--d-edge)" stroke-width="1.25"></circle><circle cx="346.25" cy="249.64999999999998" r="4" fill="var(--d-edge)"></circle><circle cx="346.25" cy="342.34999999999997" r="4" fill="var(--d-edge)"></circle><circle cx="274.25" cy="296" r="15" fill="var(--d-muted)" fill-opacity="0.6"></circle><circle cx="274.25" cy="296" r="3" fill="var(--accent)"></circle><rect x="268" y="384" width="12" height="19" fill="none" stroke="var(--d-edge)" stroke-width="1"></rect></g><g><line x1="274.25" y1="160" x2="274.25" y2="412" stroke="var(--accent)" stroke-width="1" stroke-dasharray="5 4"></line></g><g><rect x="226" y="432.35" width="110" height="52" rx="4" fill="none" stroke="var(--d-edge)" stroke-width="1.25"></rect></g><g><rect x="210" y="492" width="52" height="66" rx="4" fill="none" stroke="var(--d-edge)" stroke-width="1.25"></rect><rect x="270" y="492" width="52" height="66" rx="4" fill="none" stroke="var(--d-edge)" stroke-width="1.25"></rect></g><g><circle cx="186.5" cy="575" r="45" fill="none" stroke="var(--d-edge)" stroke-width="1.25"></circle><circle cx="186.5" cy="575" r="5" fill="var(--d-edge)"></circle><line x1="191" y1="575" x2="200" y2="575" stroke="var(--d-edge)" stroke-width="1.25"></line><line x1="396" y1="575" x2="396" y2="614" stroke="var(--d-edge)" stroke-width="2"></line><rect x="386" y="614" width="20" height="6" rx="2" fill="var(--d-edge)"></rect></g><g><line x1="192" y1="134" x2="192" y2="440" stroke="var(--d-edge)" stroke-width="2"></line><rect x="184" y="128" width="16" height="8" rx="3" fill="var(--d-edge)"></rect></g><line x1="130" y1="620" x2="450" y2="620" stroke="var(--d-edge)" stroke-width="1.25"></line><g><path d="M392 296H442" fill="none" stroke="var(--accent)" stroke-width="2" marker-end="url(#d1-arch-arrow)"></path></g><g><line x1="128" x2="138" y1="71" y2="71" stroke="var(--d-edge)" stroke-width="1"></line><line x1="128" x2="138" y1="170" y2="170" stroke="var(--d-edge)" stroke-width="1"></line><line x1="128" x2="138" y1="296" y2="296" stroke="var(--d-edge)" stroke-width="1"></line><line x1="128" x2="138" y1="413" y2="413" stroke="var(--d-edge)" stroke-width="1"></line><line x1="128" x2="138" y1="561.5" y2="561.5" stroke="var(--d-edge)" stroke-width="1"></line><line x1="128" x2="138" y1="620" y2="620" stroke="var(--d-edge)" stroke-width="1"></line><text x="124" y="75" text-anchor="end" font-size="11.5" fill="var(--muted)">1.220</text><text x="124" y="174" text-anchor="end" font-size="11.5" fill="var(--muted)">1.000</text><text x="124" y="300" text-anchor="end" font-size="11.5" font-weight="600" fill="var(--ink)">720</text><text x="124" y="315" text-anchor="end" font-size="11.5" fill="var(--muted)">linha da bola</text><text x="124" y="417" text-anchor="end" font-size="11.5" fill="var(--muted)">460</text><text x="124" y="565.5" text-anchor="end" font-size="11.5" fill="var(--muted)">130</text><text x="124" y="624" text-anchor="end" font-size="11.5" fill="var(--muted)">0</text></g><g fill="var(--ink)"><line x1="402.5" y1="106" x2="446" y2="106" stroke="var(--d-grid)" stroke-width="1"></line><text x="452" y="110" font-weight="600" fill="var(--ink)">Hopper fixo: 80–100 bolas</text><text x="452" y="126" font-size="11.5" fill="var(--muted)">disco agitador libera 1 bola por vez</text><line x1="291" y1="186" x2="446" y2="186" stroke="var(--d-grid)" stroke-width="1"></line><text x="452" y="190" font-weight="600" fill="var(--ink)">Tubo de queda fixo</text><text x="452" y="206" font-size="11.5" fill="var(--muted)">sobre o eixo do pan, 35 mm atrás do centro</text><line x1="388" y1="236" x2="446" y2="236" stroke="var(--d-grid)" stroke-width="1"></line><text x="452" y="240" font-weight="600" fill="var(--ink)">Cabeça móvel: gira ±30°, inclina ±15°</text><text x="452" y="256" font-size="11.5" fill="var(--muted)">2 rodas Ø150 mm com motores brushless</text><text x="452" y="300" fill="var(--ink)">Bola sai a ~720 mm do chão</text><line x1="346.5" y1="405" x2="446" y2="405" stroke="var(--d-grid)" stroke-width="1"></line><text x="452" y="409" fill="var(--ink)">Plataforma giratória + lazy susan 300 mm</text><line x1="336" y1="451" x2="446" y2="451" stroke="var(--d-grid)" stroke-width="1"></line><text x="452" y="455" fill="var(--ink)">Caixa IP65: ESP32, ESCs, drivers</text><line x1="322" y1="511" x2="446" y2="511" stroke="var(--d-grid)" stroke-width="1"></line><text x="452" y="515" fill="var(--ink)">Baterias Makita 18 V (2×)</text><text x="452" y="531" font-size="11.5" fill="var(--muted)">troca pela traseira</text><line x1="398" y1="586" x2="446" y2="586" stroke="var(--d-grid)" stroke-width="1"></line><text x="452" y="590" fill="var(--ink)">Rodas Ø200 mm atrás</text><text x="452" y="606" font-size="11.5" fill="var(--muted)">pés niveladores na frente</text></g></svg><figcaption>Vista lateral esquemática com as cotas de altura.</figcaption></figure>
 <p>Como o recuo do disparo age ao longo da linha da bola, e essa linha cruza os dois eixos, o tiro não gera torque que desvie a mira. O tubo de queda fica parado enquanto a cabeça gira em volta dele.</p></section><section id="s5"><div class="cab"><h3>5. Estrutura externa</h3><button type="button" class="focar" data-foco="estrutura">Ver no modelo</button></div><p>A estrutura é uma caixa de perfil de alumínio 30×30 canal 8, com 550 × 450 mm de base e colunas de 900 mm, somando ~11 m de perfil (~6–9 kg conforme a série do perfil).</p>
@@ -2327,8 +2534,129 @@ footer { margin-top: 40px; font-size: 12.5px; color: var(--muted); }
   </figcaption></figure>
 </dialog>
 
+<dialog class="leitor" id="leitor" aria-labelledby="leitorTit">
+  <div class="leitor-cab">
+    <h2 id="leitorTit">Projeto em Markdown</h2>
+    <div class="leitor-acoes">
+      <button type="button" class="principal" id="mdCopiar">Copiar</button>
+      <a id="mdBaixar" href="PROJETO.md" download="lancador-de-bolas-projeto.md">Baixar .md</a>
+      <a id="mdGithub" href="#" target="_blank" rel="noopener" hidden>Ver formatado no GitHub</a>
+      <button type="button" id="mdFechar">Fechar</button>
+    </div>
+    <p id="mdInfo">Memorial técnico completo, sem preços e sem próximos passos.</p>
+  </div>
+  <pre id="mdTexto" tabindex="0">Carregando…</pre>
+</dialog>
+
 <script>
-window.SITE = {"repo": "https://github.com/brodwolf/lancador-tenis", "modelo": "assets/modelo/lancador_glb_gz.txt", "modeloTamanho": 1122104, "pecas": "assets/modelo/pecas.json", "arquivoTeste": "cad/lista_de_pecas.csv", "imagens": [{"src": "assets/img/perspectiva.webp", "legenda": "Montagem completa em perspectiva"}, {"src": "assets/img/frente.webp", "legenda": "Frente: janela de lançamento e rodas empilhadas"}, {"src": "assets/img/lado.webp", "legenda": "Lateral com a cabeça inclinada a +10°"}, {"src": "assets/img/traseira.webp", "legenda": "Traseira: baterias, chave geral, emergência e telas de proteção"}, {"src": "assets/img/pan_tilt.webp", "legenda": "Cabeça girada a −25° e inclinada a +12°"}, {"src": "assets/img/cabeca.webp", "legenda": "Cabeça: rodas de Ø150 mm, motores e carenagens"}, {"src": "assets/img/cabeca_tras.webp", "legenda": "Cabeça por trás: fuso do tilt, servo do empurrador e garfo"}, {"src": "assets/img/hopper.webp", "legenda": "Hopper sem bolas: rotor com 4 bolsões e capuz de saída"}, {"src": "assets/img/explodida.webp", "legenda": "Vista explodida dos módulos"}], "conceito": [{"src": "assets/img/conceito_niveis.webp", "legenda": "Conceito: níveis da máquina"}, {"src": "assets/img/conceito_detalhes.webp", "legenda": "Conceito: lançamento, eletrônica, baterias e dimensões"}, {"src": "assets/img/conceito_traseira.webp", "legenda": "Conceito: vista traseira"}]};
+// Trajetória da bola na quadra. Unidades SI; eixos da cena: x lateral, y para cima, z ao longo da quadra
+// (rede em z = 0, máquina do lado z > 0, adversário em z < 0).
+// Arrasto e sustentação (Magnus): Goodwill, Chin & Haake (2004). Quique com atrito e rolamento: modelo de R. Cross.
+const FIS = (() => {
+  const M = 0.057, R = 0.0335, RHO = 1.21, G = 9.81, ALFA = 0.55;     // massa, raio, ar, gravidade, I = ALFA·m·r²
+  const K = 0.5 * RHO * Math.PI * R * R / M;
+  const PISOS = { rapida: { nome: 'Quadra rápida', e: 0.78, mu: 0.65 }, saibro: { nome: 'Saibro', e: 0.80, mu: 0.80 } };
+  const Q = { fundo: 11.885, saque: 6.40, simples: 4.115, duplas: 5.485, poste: 6.40, redeC: 0.914, redeP: 1.07 };
+  const DT = 0.002;
+  const hRede = (x) => Q.redeC + (Q.redeP - Q.redeC) * Math.min(Math.abs(x), Q.poste) / Q.poste;
+
+  function coef(v, w) {
+    const vs = R * w;
+    if (vs < 1e-6 || v < 1e-6) return [0.55, 0];
+    const q = v / vs;
+    return [0.55 + 1 / Math.pow(22.5 + 4.2 * Math.pow(q, 2.5), 0.4), 1 / (2 + q)];
+  }
+  function deriv(s, w, o) {
+    const vx = s[3], vy = s[4], vz = s[5], v = Math.hypot(vx, vy, vz), wm = Math.hypot(w[0], w[1], w[2]);
+    const [cd, cl] = coef(v, wm), fd = K * cd * v;
+    let ax = -fd * vx, ay = -fd * vy - G, az = -fd * vz;
+    if (cl > 0) { const fl = K * cl * v / wm;  // K·CL·v²·(ŵ × v̂)
+      ax += fl * (w[1] * vz - w[2] * vy); ay += fl * (w[2] * vx - w[0] * vz); az += fl * (w[0] * vy - w[1] * vx); }
+    o[0] = vx; o[1] = vy; o[2] = vz; o[3] = ax; o[4] = ay; o[5] = az;
+  }
+  const k1 = new Float64Array(6), k2 = new Float64Array(6), k3 = new Float64Array(6), k4 = new Float64Array(6), tmp = new Float64Array(6);
+  function rk4(s, w, h) {
+    deriv(s, w, k1); for (let i = 0; i < 6; i++) tmp[i] = s[i] + 0.5 * h * k1[i];
+    deriv(tmp, w, k2); for (let i = 0; i < 6; i++) tmp[i] = s[i] + 0.5 * h * k2[i];
+    deriv(tmp, w, k3); for (let i = 0; i < 6; i++) tmp[i] = s[i] + h * k3[i];
+    deriv(tmp, w, k4); for (let i = 0; i < 6; i++) s[i] += h / 6 * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
+  }
+  // Quique: restituição vertical e; impulso de atrito tangencial limitado por μ ou pelo ponto em que a bola passa a rolar.
+  function quicar(s, w, piso) {
+    const vy = s[4], jn = (1 + piso.e) * Math.abs(vy);
+    s[4] = -piso.e * vy;
+    const ux = s[3] + R * w[2], uz = s[5] - R * w[0], um = Math.hypot(ux, uz);
+    if (um > 1e-9) {
+      const j = Math.min(piso.mu * jn, um * ALFA / (1 + ALFA)), jx = -j * ux / um, jz = -j * uz / um;
+      s[3] += jx; s[5] += jz; w[0] += -jz / (ALFA * R); w[2] += jx / (ALFA * R);
+      return j >= piso.mu * jn - 1e-12 ? 'desliza' : 'rola';
+    }
+    return 'rola';
+  }
+
+  // p0: posição de saída (m), v0: velocidade (m/s), w0: spin (rad/s, vetor). op.quiques: quantos quiques simular.
+  function simular(p0, v0, w0, piso, op = {}) {
+    const nQ = op.quiques ?? 2, tmax = op.tmax ?? 4, guardar = op.guardar !== false, ignorarRede = !!op.ignorarRede;
+    const s = new Float64Array([p0[0], p0[1], p0[2], v0[0], v0[1], v0[2]]), w = [w0[0], w0[1], w0[2]], ant = new Float64Array(6);
+    const pts = guardar ? [s[0], s[1], s[2]] : null, ts = guardar ? [0] : null, cortes = [];
+    const res = { pts, ts, cortes, quiques: [], rede: null, status: 'longe', hMax: [s[1], 0], vMax: 0 };
+    let t = 0, fase = 0;
+    while (t < tmax) {
+      ant.set(s); rk4(s, w, DT); t += DT;
+      if (!res.rede && ant[2] > 0 && s[2] <= 0) {
+        const f = ant[2] / (ant[2] - s[2]), x = ant[0] + f * (s[0] - ant[0]), y = ant[1] + f * (s[1] - ant[1]);
+        const vx = ant[3] + f * (s[3] - ant[3]), vy = ant[4] + f * (s[4] - ant[4]), vz = ant[5] + f * (s[5] - ant[5]);
+        res.rede = { x, y, t: t - DT + f * DT, folga: y - R - hRede(x), v: Math.hypot(vx, vy, vz), dentroPostes: Math.abs(x) <= Q.poste };
+        if (!ignorarRede && res.rede.dentroPostes && res.rede.folga < 0) {
+          res.status = 'rede';
+          if (guardar) { // bate na rede e cai rente a ela
+            pts.push(x, y, 0.04); ts.push(res.rede.t);
+            const tq = Math.sqrt(Math.max(0, 2 * (y - R) / G));
+            for (let i = 1; i <= 12; i++) { const k = i / 12; pts.push(x, y - 0.5 * G * (k * tq) ** 2, 0.04 + 0.12 * k); ts.push(res.rede.t + 0.05 + k * tq); }
+          }
+          return res;
+        }
+      }
+      if (s[1] < R && s[4] < 0) {
+        const f = (ant[1] - R) / (ant[1] - s[1]);
+        for (let i = 0; i < 6; i++) s[i] = ant[i] + f * (s[i] - ant[i]);
+        t = t - DT + f * DT; s[1] = R;
+        const vAntes = Math.hypot(s[3], s[4], s[5]), ang = Math.atan2(-s[4], Math.hypot(s[3], s[5]));
+        const tipo = quicar(s, w, piso);
+        res.quiques.push({ x: s[0], z: s[2], t, vAntes, vDepois: Math.hypot(s[3], s[4], s[5]), ang, tipo, w: Math.hypot(...w) });
+        if (guardar) { pts.push(s[0], s[1], s[2]); ts.push(t); cortes.push(ts.length - 1); }
+        fase++;
+        if (res.quiques.length === 1 && s[2] > 0) { res.status = 'curta'; return res; }
+        if (res.quiques.length >= nQ) break;
+        continue;
+      }
+      if (fase === 1 && s[1] > res.hMax[1]) res.hMax[1] = s[1];
+      if (fase === 0 && s[1] > res.hMax[0]) res.hMax[0] = s[1];
+      if (guardar) { pts.push(s[0], s[1], s[2]); ts.push(t); }
+      if (s[2] < -22 || Math.abs(s[0]) > 14) break;
+    }
+    const q = res.quiques[0];
+    if (q) {
+      const dentroL = Math.abs(q.x) <= Q.simples, dentroF = q.z >= -Q.fundo;
+      res.status = dentroL && dentroF ? 'dentro' : 'fora';
+      res.lado = !dentroL; res.fundo = !dentroF;
+      res.zona = -q.z <= Q.saque ? 'saque' : (Q.fundo + q.z <= 1.5 ? 'profunda' : 'fundo');
+    }
+    return res;
+  }
+
+  // Disparo a partir das escolhas do usuário: saída, direção unitária, velocidade (km/h) e spin (rpm, + = topspin).
+  function disparo(p, d, kmh, rpm, piso, op) {
+    const v = kmh / 3.6, w = rpm * 2 * Math.PI / 60;
+    let ax = d[2], az = -d[0]; const n = Math.hypot(ax, az) || 1; ax /= n; az /= n;  // ŵ = ŷ × d̂ (horizontal)
+    return simular(p, [d[0] * v, d[1] * v, d[2] * v], [ax * w, 0, az * w], piso, op);
+  }
+  return { simular, disparo, hRede, PISOS, Q, R, DT };
+})();
+if (typeof module !== 'undefined') module.exports = FIS;
+</script>
+<script>
+window.SITE = {"repo": "https://github.com/brodwolf/lancador-tenis", "modelo": "assets/modelo/lancador_glb_gz.txt", "modeloTamanho": 1122104, "pecas": "assets/modelo/pecas.json", "arquivoTeste": "cad/lista_de_pecas.csv", "markdown": "PROJETO.md", "imagens": [{"src": "assets/img/perspectiva.webp", "legenda": "Montagem completa em perspectiva"}, {"src": "assets/img/frente.webp", "legenda": "Frente: janela de lançamento e rodas empilhadas"}, {"src": "assets/img/lado.webp", "legenda": "Lateral com a cabeça inclinada a +10°"}, {"src": "assets/img/traseira.webp", "legenda": "Traseira: baterias, chave geral, emergência e telas de proteção"}, {"src": "assets/img/pan_tilt.webp", "legenda": "Cabeça girada a −25° e inclinada a +12°"}, {"src": "assets/img/cabeca.webp", "legenda": "Cabeça: rodas de Ø150 mm, motores e carenagens"}, {"src": "assets/img/cabeca_tras.webp", "legenda": "Cabeça por trás: fuso do tilt, servo do empurrador e garfo"}, {"src": "assets/img/hopper.webp", "legenda": "Hopper sem bolas: rotor com 4 bolsões e capuz de saída"}, {"src": "assets/img/explodida.webp", "legenda": "Vista explodida dos módulos"}], "conceito": [{"src": "assets/img/conceito_niveis.webp", "legenda": "Conceito: níveis da máquina"}, {"src": "assets/img/conceito_detalhes.webp", "legenda": "Conceito: lançamento, eletrônica, baterias e dimensões"}, {"src": "assets/img/conceito_traseira.webp", "legenda": "Conceito: vista traseira"}]};
 </script>
 <script type="module">
 import * as THREE from 'three';
@@ -2343,10 +2671,12 @@ const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v
 const rad = THREE.MathUtils.degToRad;
 
 // ---------- abas ----------
-const abas = [['tab-3d', 'p-3d'], ['tab-img', 'p-img'], ['tab-conc', 'p-conc']];
+const abas = [['tab-3d', 'p-3d'], ['tab-quadra', 'p-quadra'], ['tab-img', 'p-img'], ['tab-conc', 'p-conc']];
+let modo = '3d';
 function abrirAba(id) {
   for (const [t, p] of abas) { const on = t === id; $(t).setAttribute('aria-selected', String(on)); $(p).hidden = !on; }
-  if (id === 'tab-3d') redimensionar();
+  $('modelo').classList.toggle('em-quadra', id === 'tab-quadra');
+  if (id === 'tab-3d') definirModo('3d'); else if (id === 'tab-quadra') definirModo('quadra');
 }
 for (const [t] of abas) $(t).addEventListener('click', () => abrirAba(t));
 
@@ -2387,8 +2717,29 @@ $('tudo').addEventListener('click', () => {
   grupos.forEach(g => g.open = abrir);
   $('tudo').textContent = abrir ? 'Fechar tudo' : 'Abrir tudo';
 });
-if (location.hash) { const g = document.querySelector(location.hash); if (g && g.tagName === 'DETAILS') g.open = true; }
+if (location.hash && location.hash !== '#quadra') { const g = document.querySelector(location.hash); if (g && g.tagName === 'DETAILS') g.open = true; }
 if (S.repo) { $('linkRepo').href = S.repo; $('linkRepo').hidden = false; }
+
+// ---------- leitor do markdown ----------
+let mdCarregado = false;
+if (S.repo) { $('mdGithub').href = S.repo + '/blob/main/PROJETO.md'; $('mdGithub').hidden = false; }
+$('abrirMd').addEventListener('click', async () => {
+  $('leitor').showModal();
+  if (mdCarregado) return;
+  try {
+    const r = await fetch(S.markdown); if (!r.ok) throw new Error('HTTP ' + r.status);
+    const t = await r.text(); $('mdTexto').textContent = t; mdCarregado = true;
+    $('mdInfo').textContent = `Memorial técnico completo, sem preços e sem próximos passos · ${t.split('\n').length.toLocaleString('pt-BR')} linhas`;
+  } catch (e) { $('mdTexto').textContent = 'Não foi possível carregar o arquivo. Ele fica disponível quando a página está publicada junto com o repositório.'; }
+});
+$('mdFechar').addEventListener('click', () => $('leitor').close());
+$('leitor').addEventListener('click', (e) => { if (e.target === $('leitor')) $('leitor').close(); });
+$('mdCopiar').addEventListener('click', () => {
+  const b = $('mdCopiar'), ok = () => { b.textContent = 'Copiado'; setTimeout(() => b.textContent = 'Copiar', 1600); };
+  const selecionar = () => { const r = document.createRange(); r.selectNodeContents($('mdTexto')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); b.textContent = 'Texto selecionado'; setTimeout(() => b.textContent = 'Copiar', 1600); };
+  if (!mdCarregado) return;
+  try { navigator.clipboard.writeText($('mdTexto').textContent).then(ok, selecionar); } catch (e) { selecionar(); }
+});
 
 // ---------- arquivos: só ativa se estiverem publicados junto ----------
 fetch(S.arquivoTeste, { method: 'HEAD' }).then(r => { if (!r.ok) throw 0; }).catch(() => {
@@ -2397,7 +2748,8 @@ fetch(S.arquivoTeste, { method: 'HEAD' }).then(r => { if (!r.ok) throw 0; }).cat
 });
 
 // ---------- cena 3D ----------
-const canvas = $('gl'), painel = $('p-3d');
+const canvas = $('gl');
+const painelAtivo = () => (modo === 'quadra' ? $('p-quadra') : $('p-3d'));
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -2409,18 +2761,52 @@ const sol = new THREE.DirectionalLight(0xffffff, 1.2); sol.position.set(1800, 32
 const camera = new THREE.PerspectiveCamera(32, 1, 20, 40000);
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = !reduz; controls.dampingFactor = 0.08;
-controls.minDistance = 400; controls.maxDistance = 9000; controls.maxPolarAngle = Math.PI * 0.495;
+controls.minDistance = 600; controls.maxDistance = 6000; controls.zoomSpeed = 0.6; controls.maxPolarAngle = Math.PI * 0.495;
 const sombraTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
   const r = g.createRadialGradient(128, 128, 10, 128, 128, 128); r.addColorStop(0, 'rgba(0,0,0,0.36)'); r.addColorStop(1, 'rgba(0,0,0,0)');
   g.fillStyle = r; g.fillRect(0, 0, 256, 256); return new THREE.CanvasTexture(c); })();
 const sombra = new THREE.Mesh(new THREE.PlaneGeometry(1500, 1300), new THREE.MeshBasicMaterial({ map: sombraTex, transparent: true, depthWrite: false }));
-sombra.rotation.x = -Math.PI / 2; sombra.position.y = 0.5; scene.add(sombra);
+sombra.rotation.x = -Math.PI / 2; sombra.position.y = 0.5;
+const maquina = new THREE.Group(); maquina.add(sombra); scene.add(maquina);
 let grade = null;
 function montarGrade() { if (grade) scene.remove(grade); const c = new THREE.Color(css('--line') || '#d2d9e0');
-  grade = new THREE.GridHelper(6000, 60, c, c); grade.material.transparent = true; grade.material.opacity = 0.5; scene.add(grade); }
-function redimensionar() { const r = painel.getBoundingClientRect(); if (!r.width) return;
-  renderer.setSize(r.width, r.height, false); camera.aspect = r.width / Math.max(1, r.height); camera.updateProjectionMatrix(); }
-new ResizeObserver(redimensionar).observe(painel);
+  grade = new THREE.GridHelper(6000, 60, c, c); grade.material.transparent = true; grade.material.opacity = 0.5; grade.visible = modo !== 'quadra'; scene.add(grade); }
+// na quadra, o centro da imagem fica no meio da área livre (entre os botões de câmera e o painel de controles)
+function redimensionar() {
+  const pa = painelAtivo(), r = pa.getBoundingClientRect(); if (!r.width) return;
+  renderer.setSize(r.width, r.height, false);
+  let topo = 0, base = 0;
+  if (modo === 'quadra') {
+    topo = Math.max(0, pa.querySelector('.vistas').getBoundingClientRect().bottom - r.top + 4);
+    base = Math.max(0, r.bottom - pa.querySelector('.controles').getBoundingClientRect().top + 8);
+    if (topo + base > r.height * 0.75) topo = base = 0;
+  }
+  const hl = Math.max(1, r.height - topo - base);
+  if (topo || base) camera.setViewOffset(r.width, hl, 0, -topo, r.width, r.height); else camera.clearViewOffset();
+  camera.aspect = r.width / hl; camera.updateProjectionMatrix();
+}
+const obsTam = new ResizeObserver(redimensionar);
+for (const el of [$('p-3d'), $('p-quadra'), document.querySelector('.qctl')]) obsTam.observe(el);
+
+// ---------- zoom suave, proporcional ao gesto (roda do mouse, trackpad ou botões) ----------
+let zoomAlvo = null;
+function zoomPor(f) {
+  const d = camera.position.distanceTo(controls.target);
+  zoomAlvo = THREE.MathUtils.clamp((zoomAlvo ?? d) * f, controls.minDistance, controls.maxDistance); anima = null;
+}
+$('modelo').addEventListener('wheel', (e) => {
+  if (e.target !== canvas) return;
+  e.preventDefault(); e.stopPropagation();   // substitui o zoom em degraus do OrbitControls
+  const px = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1);
+  zoomPor(Math.exp(THREE.MathUtils.clamp(px, -150, 150) * (e.ctrlKey ? 0.008 : 0.0011)));
+}, { capture: true, passive: false });
+document.querySelectorAll('[data-zoom]').forEach(b => b.addEventListener('click', () => zoomPor(b.dataset.zoom === 'mais' ? 0.8 : 1.25)));
+function passoZoom(dt) {
+  if (zoomAlvo === null) return;
+  const off = camera.position.clone().sub(controls.target), d = off.length(), nd = reduz ? zoomAlvo : d + (zoomAlvo - d) * (1 - Math.exp(-dt * 12));
+  camera.position.copy(controls.target).addScaledVector(off.normalize(), nd);
+  if (Math.abs(nd - zoomAlvo) < 0.5) zoomAlvo = null;
+}
 
 const VISTAS = { iso: [36, 16, 3300, 640], frente: [0, 6, 3200, 620], lado: [90, 6, 3200, 620], tras: [200, 14, 3200, 600],
   cabeca: [34, 12, 1500, 740], cabecaTras: [-140, 18, 1500, 700], pan: [30, 34, 1500, 500], hopper: [15, 55, 1700, 1050], eletrica: [24, 10, 1600, 320] };
@@ -2451,7 +2837,7 @@ async function carregar() {
   const j = await (await fetch(S.pecas)).json(); meta = j.pecas; P = j.params;
   const buf = await baixarModelo();
   new GLTFLoader().parse(buf, './', (g) => {
-    raiz = g.scene; scene.add(raiz);
+    raiz = g.scene; maquina.add(raiz);
     raiz.traverse(o => {
       if (!o.isMesh) return;
       o.material = o.material.clone();
@@ -2469,7 +2855,8 @@ async function carregar() {
     if (nos.porca) base0.porcaRot = nos.porca.rotation.x;
     if (nos.braco && nos.tilt) { nos.pivo = new THREE.Group(); nos.pivo.position.set(0, -85, 40); nos.tilt.add(nos.pivo); nos.pivo.updateMatrixWorld(true); nos.pivo.attach(nos.braco); }
     aplicarVis(); aplicarPose();
-    $('carregando').hidden = true; document.querySelectorAll('.tiro').forEach(b => b.disabled = false);
+    $('carregando').hidden = true; $('qCarregando').hidden = true; document.querySelectorAll('.tiro').forEach(b => b.disabled = false);
+    if (modo === 'quadra') prepararQuadra();
     document.querySelectorAll('.focar').forEach(b => b.disabled = false);
   }, falhou);
 }
@@ -2477,9 +2864,10 @@ function falhou(e) { $('cargaTxt').textContent = 'Não foi possível carregar o 
 
 // ---------- pose ----------
 let panDeg = 0, tiltDeg = 0;
-function aplicarPose() {
+function aplicarPose() { pose(panDeg, tiltDeg); }
+function pose(pd, td) {
   if (!nos.pan) return;
-  const t = rad(tiltDeg); nos.pan.rotation.z = rad(panDeg); nos.tilt.rotation.x = t;
+  const t = rad(td); nos.pan.rotation.z = rad(pd); nos.tilt.rotation.x = t;
   const [u, v] = P.TILT_NUT; const nu = u * Math.cos(t) - v * Math.sin(t), nv = u * Math.sin(t) + v * Math.cos(t) + P.Z_PIVOT;
   const a = -Math.atan2(nu - u, nv - P.ACT_PIVOT_Z);
   if (nos.atuador_tilt) nos.atuador_tilt.rotation.x = a;
@@ -2524,12 +2912,12 @@ function pertence(o, f) {
 }
 function pintar() {
   COR.set(css('--accent') || '#245a8c');
-  const f = focoAtivo && (focoAtivo.grupos || focoAtivo.prefixos) ? focoAtivo : null;
+  const q = modo === 'quadra', f = !q && focoAtivo && (focoAtivo.grupos || focoAtivo.prefixos) ? focoAtivo : null;
   for (const o of malhas) {
     const m0 = o.userData.m0, dentro = pertence(o, f);
     o.material.opacity = dentro ? m0.opacity : 0.08; o.material.transparent = dentro ? m0.transparent : true;
     o.material.depthWrite = dentro ? !m0.transparent : false;
-    const sel = o.userData.base && o.userData.base === selecionado;
+    const sel = !q && o.userData.base && o.userData.base === selecionado;
     if (o.material.emissive) { o.material.emissive.copy(sel ? COR : PRETO); o.material.emissiveIntensity = sel ? 0.55 : 0; }
     o.material.needsUpdate = true;
   }
@@ -2554,6 +2942,7 @@ canvas.addEventListener('pointerup', e => {
   const r = canvas.getBoundingClientRect();
   ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
   ray.setFromCamera(ptr, camera);
+  if (modo === 'quadra') { cliqueQuadra(); return; }
   const hit = ray.intersectObjects(malhas, false).find(h => {
     let p = h.object; while (p) { if (!p.visible) return false; p = p.parent; }
     return h.object.material.opacity > 0.1 && !/^bola_tenis/.test(h.object.userData.base || '');
@@ -2588,14 +2977,14 @@ const trilha = new THREE.Line(new THREE.BufferGeometry().setFromPoints(Array.fro
 trilha.frustumCulled = false; trilha.visible = false; scene.add(trilha);
 let disparo = null; const LENTO = 0.1;
 function ptTilt(u, v) { nos.tilt.updateMatrixWorld(true); return new THREE.Vector3(0, u, v).applyMatrix4(nos.tilt.matrixWorld); }
-document.querySelectorAll('.tiro').forEach(b => b.addEventListener('click', () => {
-  if (!raiz || disparo) return;
+document.querySelectorAll('[data-tiro]').forEach(b => b.addEventListener('click', () => {
+  if (!raiz || disparo || modo !== '3d') return;
   tiro = TIROS[b.dataset.tiro]; [rpmSup, rpmInf] = rpms(tiro);
   $('avisoTxt').textContent = `${tiro.nome}: ${tiro.v} km/h · roda de cima ${Math.round(rpmSup).toLocaleString('pt-BR')} rpm, de baixo ${Math.round(rpmInf).toLocaleString('pt-BR')} rpm (câmera lenta 10×)`;
   $('aviso').hidden = false;
   const bola = new THREE.Mesh(bolaGeo, bolaMat); scene.add(bola);
   if (nos.bolaBerco) nos.bolaBerco.visible = false;
-  disparo = { t: 0, fase: 0, bola, pts: [] }; document.querySelectorAll('.tiro').forEach(x => x.disabled = true);
+  disparo = { t: 0, fase: 0, bola, pts: [] }; document.querySelectorAll('[data-tiro]').forEach(x => x.disabled = true);
 }));
 function passo(dt) {
   const d = disparo; d.t += dt; const vMM = tiro.v / 3.6 * 1000;
@@ -2614,8 +3003,301 @@ function passo(dt) {
     if (nos.rotor) { nos.rotor.userData.r0 ??= nos.rotor.rotation.z; nos.rotor.rotation.z = nos.rotor.userData.r0 + rad(90) * k; }
     trilha.material.opacity = 0.85 * (1 - k);
     if (k >= 1) { scene.remove(d.bola); trilha.visible = false; trilha.material.opacity = 0.85; if (nos.rotor) nos.rotor.userData.r0 = nos.rotor.rotation.z;
-      if (nos.bolaBerco) nos.bolaBerco.visible = true; disparo = null; document.querySelectorAll('.tiro').forEach(x => x.disabled = false); } }
+      if (nos.bolaBerco) nos.bolaBerco.visible = true; disparo = null; document.querySelectorAll('[data-tiro]').forEach(x => x.disabled = false); } }
 }
+
+// ---------- quadra: simulação de onde a bola cai ----------
+const Qd = FIS.Q, MM = 1000;
+const quadra = new THREE.Group(); quadra.visible = false; scene.add(quadra);
+const COR_Q = { dentro: 0xd6e64a, fora: 0xf0894a, neutro: 0x8b96a1 };
+const PISO_COR = { rapida: [0x3b6d57, 0x2b5e91], saibro: [0xa65331, 0xb75e37] };
+const matFora = new THREE.MeshStandardMaterial({ roughness: 0.96 }), matDentro = new THREE.MeshStandardMaterial({ roughness: 0.92 });
+function chao(w, d, mat, y) { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), mat); m.rotation.x = -Math.PI / 2; m.position.y = y; quadra.add(m); return m; }
+chao(18290, 36570, matFora, 0); chao(Qd.duplas * 2 * MM, Qd.fundo * 2 * MM, matDentro, 4);
+const matLinha = new THREE.MeshBasicMaterial({ color: 0xeef1f3, toneMapped: false });
+function faixa(x1, z1, x2, z2, w) { const m = chao(Math.abs(x2 - x1) || w, Math.abs(z2 - z1) || w, matLinha, 8); m.position.x = (x1 + x2) / 2; m.position.z = (z1 + z2) / 2; }
+{
+  const F = Qd.fundo * MM, S = Qd.simples * MM, D = Qd.duplas * MM, SV = Qd.saque * MM, w = 50, wb = 100;
+  for (const k of [-1, 1]) {
+    faixa(-D, k * (F - wb / 2), D, k * (F - wb / 2), wb);            // linha de fundo
+    faixa(k * (D - w / 2), -F, k * (D - w / 2), F, w);              // lateral de duplas
+    faixa(k * (S - w / 2), -F, k * (S - w / 2), F, w);              // lateral de simples
+    faixa(-S, k * (SV - w / 2), S, k * (SV - w / 2), w);            // linha de saque
+    faixa(0, k * (F - wb), 0, k * (F - wb - 100), w);               // marca central
+  }
+  faixa(0, -SV, 0, SV, w);                                          // linha central de saque
+  // rede: tela, fita, cinta central e postes
+  const n = 48, tela = [], fita = [], ind = [];
+  for (let i = 0; i <= n; i++) { const x = -Qd.poste + 2 * Qd.poste * i / n, h = FIS.hRede(x) * MM;
+    tela.push(x * MM, 0, 0, x * MM, h - 50, 0); fita.push(x * MM, h - 50, 0, x * MM, h, 0); }
+  for (let i = 0; i < n; i++) { const a = 2 * i; ind.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+  const faixaRede = (pos, mat) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(ind); quadra.add(new THREE.Mesh(g, mat)); };
+  faixaRede(tela, new THREE.MeshBasicMaterial({ color: 0x0d1114, transparent: true, opacity: 0.4, side: THREE.DoubleSide, depthWrite: false }));
+  faixaRede(fita, new THREE.MeshBasicMaterial({ color: 0xf4f6f7, side: THREE.DoubleSide, toneMapped: false }));
+  const fios = [];
+  for (let x = -Qd.poste * MM; x <= Qd.poste * MM; x += 110) fios.push(x, 0, 0, x, FIS.hRede(x / MM) * MM - 50, 0);
+  for (let y = 110; y < 860; y += 110) fios.push(-Qd.poste * MM, y, 0, Qd.poste * MM, y, 0);
+  const gf = new THREE.BufferGeometry(); gf.setAttribute('position', new THREE.Float32BufferAttribute(fios, 3));
+  quadra.add(new THREE.LineSegments(gf, new THREE.LineBasicMaterial({ color: 0xc9d1d8, transparent: true, opacity: 0.22, depthWrite: false })));
+  const cinta = new THREE.Mesh(new THREE.PlaneGeometry(50, Qd.redeC * MM - 50), new THREE.MeshBasicMaterial({ color: 0xf4f6f7, side: THREE.DoubleSide, toneMapped: false }));
+  cinta.position.y = (Qd.redeC * MM - 50) / 2; quadra.add(cinta);
+  const matPoste = new THREE.MeshStandardMaterial({ color: 0x2a3036, roughness: 0.5, metalness: 0.4 });
+  for (const k of [-1, 1]) { const p = new THREE.Mesh(new THREE.CylinderGeometry(40, 40, Qd.redeP * MM + 20, 16), matPoste); p.position.set(k * (Qd.poste * MM + 40), (Qd.redeP * MM + 20) / 2, 0); quadra.add(p); }
+}
+function corPiso() { const [a, b] = PISO_COR[$('qPiso').value]; matFora.color.setHex(a); matDentro.color.setHex(b); }
+corPiso();
+
+// trajetória, marcas e bola
+const matTraj = [new THREE.MeshBasicMaterial({ color: COR_Q.dentro, toneMapped: false }),
+  new THREE.MeshBasicMaterial({ color: COR_Q.dentro, toneMapped: false, transparent: true, opacity: 0.45, depthWrite: false })];
+let tubos = [];
+function anel(ri, ro, cor, op, deitado = true) {
+  const g = new THREE.RingGeometry(ri, ro, 56); if (deitado) g.rotateX(-Math.PI / 2);
+  const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: cor, transparent: true, opacity: op, toneMapped: false, depthWrite: false, side: THREE.DoubleSide }));
+  m.position.y = 12; m.visible = false; m.renderOrder = 2; quadra.add(m); return m;
+}
+const mQ1 = anel(150, 225, COR_Q.dentro, 1), mQ1f = anel(0, 150, COR_Q.dentro, 0.3), mQ2 = anel(80, 115, 0xffffff, 0.75);
+const mAlvo = anel(250, 285, 0xffffff, 0.95), mAlvoC = anel(0, 40, 0xffffff, 0.95), mRede = anel(48, 66, 0xffffff, 0.95, false);
+const bolaQ = new THREE.Mesh(bolaGeo, bolaMat); bolaQ.scale.setScalar(1.6); bolaQ.visible = false; quadra.add(bolaQ);   // um pouco maior que a real, para enxergar de longe
+const sombraQ = new THREE.Mesh(new THREE.CircleGeometry(34, 20).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false }));
+sombraQ.position.y = 10; sombraQ.visible = false; quadra.add(sombraQ);
+const mapa = new THREE.InstancedMesh(new THREE.CircleGeometry(75, 14).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false, transparent: true, opacity: 0.92, depthWrite: false }), 400);
+mapa.count = 0; mapa.visible = false; mapa.renderOrder = 1; mapa.frustumCulled = false; quadra.add(mapa);
+
+// saída da bola para um giro/inclinação qualquer, sem mexer no modelo (mesma cadeia de matrizes do GLB)
+let cadeia = null;
+const _e = new THREE.Euler(), _q = new THREE.Quaternion(), _mA = new THREE.Matrix4(), _mB = new THREE.Matrix4(), _M = new THREE.Matrix4(), _v = new THREE.Vector3();
+function poseSaida(panD, tiltD) {
+  if (!cadeia) { cadeia = new THREE.Matrix4(); const l = []; for (let o = nos.tilt.parent; o && o !== nos.pan; o = o.parent) l.unshift(o); for (const o of l) { o.updateMatrix(); cadeia.multiply(o.matrix); } }
+  _e.copy(nos.pan.rotation); _e.z = rad(panD); _mA.compose(base0.pan, _q.setFromEuler(_e), nos.pan.scale);
+  _e.copy(nos.tilt.rotation); _e.x = rad(tiltD); _mB.compose(base0.tilt, _q.setFromEuler(_e), nos.tilt.scale);
+  _M.multiplyMatrices(nos.pan.parent.matrixWorld, _mA).multiply(cadeia).multiply(_mB);
+  _v.set(0, P.NIP + 40, 0).applyMatrix4(_M); const p = [_v.x / MM, _v.y / MM, _v.z / MM];
+  _v.set(0, 1, 0).transformDirection(_M); return { p, d: [_v.x, _v.y, _v.z] };
+}
+
+const nf = (c) => new Intl.NumberFormat('pt-BR', { minimumFractionDigits: c, maximumFractionDigits: c });
+const nf0 = nf(0), nf1 = nf(1), nf2 = nf(2);
+const sinal1 = (x) => (x > 0.04 ? '+' : x < -0.04 ? '−' : '') + nf1.format(Math.abs(x)).replace(/,0$/, '') + '°';
+const kmh = (v) => nf0.format(v * 3.6);
+const lerQ = () => ({ v: +$('qv').value, s: +$('qs').value, pan: -(+$('qp').value), tilt: +$('qt').value, piso: FIS.PISOS[$('qPiso').value] });
+let alvo = null, ultimo = null, voo = null, qPronta = false, vistaQ = 'geral';
+const ALVO_PADRAO = { x: 0, z: -9.2 };
+const eixoQ = new THREE.Vector3(); let wQ = 0;
+
+function saidasQ() {
+  const { v, s } = lerQ();
+  $('qvv').textContent = v + ' km/h';
+  $('qsv').textContent = (s > 0 ? '+' : s < 0 ? '−' : '') + nf0.format(Math.abs(s));
+  $('qpv').textContent = sinal1(+$('qp').value); $('qtv').textContent = sinal1(+$('qt').value);
+}
+function posicionarMaquina() {
+  const linha = $('qPos').value === 'saque' ? Qd.saque : Qd.fundo;
+  maquina.position.set(+$('qLado').value * MM, 0, linha * MM + 225);   // frente da estrutura encostada na linha
+  maquina.updateMatrixWorld(true);
+}
+function desenhar(r) {
+  for (const t of tubos) { quadra.remove(t); t.geometry.dispose(); } tubos = [];
+  const n = r.ts.length, cortes = [0, ...r.cortes.filter(c => c < n - 1), n - 1];
+  for (let k = 0; k < cortes.length - 1; k++) {
+    const a = cortes[k], b = cortes[k + 1], pts = [];
+    const passo = Math.max(1, Math.round((b - a) / 90));
+    for (let i = a; i < b; i += passo) pts.push(new THREE.Vector3(r.pts[3 * i] * MM, r.pts[3 * i + 1] * MM, r.pts[3 * i + 2] * MM));
+    pts.push(new THREE.Vector3(r.pts[3 * b] * MM, r.pts[3 * b + 1] * MM, r.pts[3 * b + 2] * MM));
+    if (pts.length < 2) continue;
+    const curva = new THREE.CatmullRomCurve3(pts, false, 'centripetal');
+    const tubo = new THREE.Mesh(new THREE.TubeGeometry(curva, Math.min(240, pts.length * 3), 21, 7, false), matTraj[k === 0 ? 0 : 1]);
+    quadra.add(tubo); tubos.push(tubo);
+  }
+  const q1 = r.quiques[0], q2 = r.quiques[1], cor = r.status === 'dentro' ? COR_Q.dentro : COR_Q.fora;
+  for (const m of [mQ1, mQ1f]) { m.visible = !!q1; if (q1) { m.position.set(q1.x * MM, 12, q1.z * MM); m.material.color.setHex(cor); } }
+  mQ2.visible = !!q2 && r.status !== 'curta'; if (q2) mQ2.position.set(q2.x * MM, 12, q2.z * MM);
+  mRede.visible = !!r.rede; if (r.rede) { mRede.position.set(r.rede.x * MM, r.rede.y * MM, 0); mRede.material.color.setHex(r.status === 'rede' ? COR_Q.fora : 0xffffff); }
+  for (const m of [mAlvo, mAlvoC]) { m.visible = !!alvo; if (alvo) m.position.set(alvo.x * MM, 14, alvo.z * MM); }
+}
+function placar(r, v, s) {
+  const q = r.quiques[0], selo = $('qSelo'); let txt, mal = true;
+  if (r.status === 'dentro') { mal = false; txt = 'Dentro · ' + { saque: 'área de saque', fundo: 'fundo de quadra', profunda: 'perto da linha de fundo' }[r.zona]; }
+  else if (r.status === 'rede') txt = 'Bate na rede';
+  else if (r.status === 'curta') txt = 'Quica antes da rede';
+  else txt = 'Fora · ' + (r.lado && r.fundo ? 'fundo e lateral' : r.lado ? 'lateral' : 'passou da linha de fundo');
+  selo.textContent = txt; selo.className = 'selo' + (mal ? ' mal' : '');
+  $('qTempo').textContent = q ? `1º quique em ${nf2.format(q.t)} s` : r.rede ? `chega à rede em ${nf2.format(r.rede.t)} s` : '';
+  const lado = (x) => Math.abs(x) < 0.05 ? 'centro' : `${nf1.format(Math.abs(x))} m ${x < 0 ? 'esq.' : 'dir.'}`;
+  const adv = q && q.z <= 0;
+  $('qQ1').textContent = !q ? '—' : adv ? `${nf1.format(-q.z)} m · ${lado(q.x)}` : `${nf1.format(q.z)} m antes`;
+  const fr = r.rede;
+  const dist = (m) => Math.abs(m) < 0.1 ? `${Math.max(1, Math.round(Math.abs(m) * 100))} cm` : `${nf2.format(Math.abs(m))} m`;
+  $('qRede').textContent = !fr ? '—' : fr.folga >= 0 ? `${dist(fr.folga)} · ${kmh(fr.v)} km/h` : `faltaram ${dist(fr.folga)}`;
+  $('qRede').classList.toggle('alerta', !!fr && fr.folga < 0);
+  $('qQuique').textContent = adv ? `${kmh(q.vAntes)} km/h · ${nf0.format(q.ang * 180 / Math.PI)}°` : '—';
+  $('qDepois').textContent = adv ? `sobe ${nf2.format(r.hMax[1])} m · ${kmh(q.vDepois)} km/h` : '—';
+  const [a, b] = rpms({ v, s }), limite = Math.max(a, b) > 5500 || Math.min(a, b) < 0;
+  $('qRodas').textContent = `${nf0.format(a)} / ${nf0.format(b)}${limite ? ' · acima de 5.500' : ''}`;
+  $('qRodas').classList.toggle('alerta', limite);
+}
+function atualizarQuadra() {
+  if (!raiz) return;
+  saidasQ();
+  const { v, s, pan, tilt, piso } = lerQ();
+  pose(pan, tilt);
+  const { p, d } = poseSaida(pan, tilt);
+  ultimo = FIS.disparo(p, d, v, s, piso);
+  eixoQ.set(d[2], 0, -d[0]).normalize(); wQ = s * 2 * Math.PI / 60;
+  [rpmSup, rpmInf] = rpms({ v, s });
+  desenhar(ultimo); placar(ultimo, v, s);
+  voo = null; bolaQ.visible = sombraQ.visible = false;
+  if ($('qMapa').checked) agendarMapa();
+}
+let mapaPend = 0;
+function agendarMapa() { clearTimeout(mapaPend); mapaPend = setTimeout(calcularMapa, 90); }
+function calcularMapa() {
+  if (!raiz) return;
+  const { v, s, piso } = lerQ(), m4 = new THREE.Matrix4(), c = new THREE.Color(); let i = 0;
+  for (let pan = -30; pan <= 30; pan += 5) for (let t = -15; t <= 15; t += 1.5) {
+    const { p, d } = poseSaida(pan, t), r = FIS.disparo(p, d, v, s, piso, { quiques: 1, guardar: false });
+    let x, z, cor;
+    if (r.status === 'rede') { x = r.rede.x; z = 0.3; cor = COR_Q.neutro; }
+    else if (r.quiques[0]) { x = r.quiques[0].x; z = r.quiques[0].z; cor = r.status === 'dentro' ? COR_Q.dentro : r.status === 'curta' ? COR_Q.neutro : COR_Q.fora; }
+    else continue;
+    m4.makeTranslation(x * MM, 10, z * MM); mapa.setMatrixAt(i, m4); mapa.setColorAt(i, c.setHex(cor)); i++;
+  }
+  mapa.count = i; mapa.instanceMatrix.needsUpdate = true; if (mapa.instanceColor) mapa.instanceColor.needsUpdate = true;
+}
+
+// mira: acha giro e inclinação para o 1º quique cair no ponto; se não der, procura a velocidade mais próxima que dá
+function resolver(xa, za, v, s, piso) {
+  const [ra, rb] = rpms({ v, s }); if (Math.max(ra, rb) > 5500 || Math.min(ra, rb) < 0) return { ok: false, motivo: 'rodas' };
+  let pan = 0;
+  for (let k = 0; k < 6; k++) { const { p, d } = poseSaida(pan, 8);
+    pan += THREE.MathUtils.radToDeg(Math.atan2(-(xa - p[0]), -(za - p[2])) - Math.atan2(-d[0], -d[2])); }
+  if (Math.abs(pan) > 30.05) return { ok: false, motivo: 'giro' };
+  const erro = (t) => { const { p, d } = poseSaida(pan, t), r = FIS.disparo(p, d, v, s, piso, { quiques: 1, guardar: false, ignorarRede: true });
+    const q = r.quiques[0]; return q ? Math.hypot(q.x - p[0], q.z - p[2]) - Math.hypot(xa - p[0], za - p[2]) : 99; };
+  let lo = -15, hi = 15; const elo = erro(lo), ehi = erro(hi);
+  if (ehi < 0) return { ok: false, motivo: 'longe' };
+  if (elo > 0) return { ok: false, motivo: 'perto' };
+  for (let k = 0; k < 18; k++) { const m = (lo + hi) / 2; if (erro(m) < 0) lo = m; else hi = m; }
+  const tilt = (lo + hi) / 2, { p, d } = poseSaida(pan, tilt), r = FIS.disparo(p, d, v, s, piso, { quiques: 1, guardar: false });
+  if (r.status === 'rede') return { ok: false, motivo: 'rede' };
+  return { ok: true, pan, tilt };
+}
+function mirar(a, avisar = true) {
+  if (!raiz) return;
+  alvo = a;
+  const { v, s, piso } = lerQ();
+  let r = resolver(a.x, a.z, v, s, piso), v2 = v;
+  if (!r.ok && r.motivo !== 'giro') {
+    busca: for (let dv = 1; dv <= 90; dv++) for (const vv of [v + dv, v - dv]) {
+      if (vv < 30 || vv > 120) continue; const r2 = resolver(a.x, a.z, vv, s, piso); if (r2.ok) { r = r2; v2 = vv; break busca; }
+    }
+  }
+  if (r.ok) {
+    $('qv').value = v2; $('qp').value = (-r.pan).toFixed(1); $('qt').value = r.tilt.toFixed(1);
+    atualizarQuadra();
+    if (avisar) $('qNota').textContent = `Mira ajustada: giro ${sinal1(-r.pan)}, inclinação ${sinal1(r.tilt)}` + (v2 !== v ? `; velocidade mudou para ${v2} km/h para alcançar o ponto.` : '.');
+  } else {
+    atualizarQuadra();
+    $('qNota').textContent = r.motivo === 'giro' ? 'Esse ponto fica fora do giro de ±30° a partir desta posição.'
+      : r.motivo === 'rodas' ? 'Com esse spin as rodas passariam de 5.500 rpm. Reduza o spin.'
+      : 'A máquina não alcança esse ponto daqui com inclinação de ±15°. Experimente outra posição ou outro spin.';
+  }
+}
+function cliqueQuadra() {
+  const pt = new THREE.Vector3();
+  if (!ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), pt)) return;
+  if (pt.z > -150) { $('qNota').textContent = 'Toque do outro lado da rede para escolher onde a bola deve quicar.'; return; }
+  if (Math.abs(pt.x) > 9000 || pt.z < -18000) return;
+  mirar({ x: pt.x / MM, z: pt.z / MM });
+}
+function lancar() {
+  if (!ultimo) return;
+  voo = { t: 0, i: 0, fim: 0, k: $('qLento').checked || reduz ? 0.25 : 1 };
+  bolaQ.visible = sombraQ.visible = true;
+}
+function passoVoo(dt) {
+  const r = ultimo, ts = r.ts, pts = r.pts, n = ts.length;
+  voo.t += dt * voo.k;
+  while (voo.i < n - 2 && ts[voo.i + 1] <= voo.t) voo.i++;
+  const a = voo.i, f = THREE.MathUtils.clamp((voo.t - ts[a]) / ((ts[a + 1] - ts[a]) || 1), 0, 1);
+  const x = pts[3 * a] + f * (pts[3 * a + 3] - pts[3 * a]), y = pts[3 * a + 1] + f * (pts[3 * a + 4] - pts[3 * a + 1]), z = pts[3 * a + 2] + f * (pts[3 * a + 5] - pts[3 * a + 2]);
+  bolaQ.position.set(x * MM, y * MM, z * MM); sombraQ.position.set(x * MM, 10, z * MM);
+  bolaQ.rotateOnWorldAxis(eixoQ, wQ * dt * voo.k);
+  if (voo.t >= ts[n - 1]) { voo.fim += dt; if (voo.fim > 0.9) { voo = null; bolaQ.visible = sombraQ.visible = false; } }
+}
+
+// câmeras da quadra: enquadra a máquina e a quadra adversária na área livre, em qualquer proporção de tela
+const camFit = new THREE.PerspectiveCamera();
+function enquadrar(al, dir, pontos, margem = 0.92) {
+  camFit.fov = camera.fov; camFit.aspect = camera.aspect; camFit.near = 10; camFit.far = 1e6; camFit.updateProjectionMatrix();
+  dir = dir.clone().normalize(); let d = 30000;
+  for (let k = 0; k < 10; k++) {
+    camFit.position.copy(al).addScaledVector(dir, d); camFit.lookAt(al); camFit.updateMatrixWorld(true);
+    let m = 0; for (const p of pontos) { _v.copy(p).project(camFit); m = Math.max(m, Math.abs(_v.x), Math.abs(_v.y)); }
+    d *= m / margem;
+  }
+  return al.clone().addScaledVector(dir, d);
+}
+function irParaQ(nome, inst = false) {
+  vistaQ = nome;
+  const mz = maquina.position.z, mx = maquina.position.x, zc = (mz + 600 - 12400) / 2;
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  const caixa = [V(mx, 1250, mz + 300), V(mx - 400, 0, mz + 500), V(mx + 400, 0, mz + 500), V(-5485, 0, -12400), V(5485, 0, -12400),
+    V(-6440, 1070, 0), V(6440, 1070, 0), V(-5485, 0, Math.max(mz, 6400)), V(5485, 0, Math.max(mz, 6400))];
+  let pos, al;
+  if (nome === 'atras') { al = V(mx * 0.3, 0, -4800); pos = V(mx - 1500, 3900, mz + 5600); }
+  else if (nome === 'cima') { al = V(0, 0, zc); pos = enquadrar(al, V(0, 1, 0.002), caixa, 0.96); }
+  else if (nome === 'lado') { al = V(0, 700, zc); pos = enquadrar(al, V(-1, 0.16, 0), caixa, 0.96); }
+  else if (nome === 'recebedor') { const xa = ultimo && ultimo.quiques[0] ? ultimo.quiques[0].x * MM * 0.6 : 0; al = V(mx, 800, mz); pos = V(xa, 1650, -14500); }
+  else { al = V(0, 0, zc); pos = enquadrar(al, V(-0.36, 0.66, 0.66), caixa); }
+  zoomAlvo = null;
+  if (inst || reduz) { camera.position.copy(pos); controls.target.copy(al); controls.update(); return; }
+  anima = { t: 0, p0: camera.position.clone(), p1: pos, a0: controls.target.clone(), a1: al };
+}
+document.querySelectorAll('[data-qvista]').forEach(b => b.addEventListener('click', () => irParaQ(b.dataset.qvista)));
+
+function prepararQuadra() {
+  if (!raiz) return;
+  posicionarMaquina();
+  if (!qPronta) { qPronta = true; mirar(ALVO_PADRAO, false); irParaQ('geral', true); }
+  else atualizarQuadra();
+}
+
+// trocar entre o modelo na bancada e a quadra
+const camSalva = {};
+function definirModo(m) {
+  if (m === modo && canvas.parentNode === painelAtivo()) { redimensionar(); return; }
+  camSalva[modo] = { p: camera.position.clone(), a: controls.target.clone() };
+  modo = m; const q = m === 'quadra';
+  painelAtivo().prepend(canvas);
+  anima = null; zoomAlvo = null; voo = null; bolaQ.visible = sombraQ.visible = false;
+  if (disparo) { scene.remove(disparo.bola); trilha.visible = false; trilha.material.opacity = 0.85; if (nos.pivo) nos.pivo.rotation.x = 0;
+    if (nos.bolaBerco) nos.bolaBerco.visible = true; disparo = null; document.querySelectorAll('[data-tiro]').forEach(x => x.disabled = false); }
+  quadra.visible = q; if (grade) grade.visible = !q;
+  controls.minDistance = q ? 1200 : 600; controls.maxDistance = q ? 70000 : 6000;
+  camera.fov = q ? 40 : 32; camera.near = q ? 60 : 20; camera.far = q ? 160000 : 40000;
+  redimensionar();
+  if (q) { aplicarExplosao(0); $('ficha').hidden = true; prepararQuadra(); }
+  else { maquina.position.set(0, 0, 0); maquina.updateMatrixWorld(true); aplicarExplosao(explode); aplicarPose(); [rpmSup, rpmInf] = rpms(tiro); }
+  if (raiz) pintar();
+  const s = camSalva[m];
+  if (s) { camera.position.copy(s.p); controls.target.copy(s.a); controls.update(); }
+  else if (q && raiz) irParaQ('geral', true);
+}
+
+for (const id of ['qv', 'qs']) $(id).addEventListener('input', () => { alvo = null; $('qNota').textContent = 'Toque na quadra do outro lado da rede para mirar.'; atualizarQuadra(); });
+for (const id of ['qp', 'qt']) $(id).addEventListener('input', () => { alvo = null; atualizarQuadra(); });
+for (const id of ['qPos', 'qLado']) $(id).addEventListener('change', () => { posicionarMaquina(); if (alvo) mirar(alvo); else atualizarQuadra(); irParaQ(vistaQ); });
+$('qPiso').addEventListener('change', () => { corPiso(); if (alvo) mirar(alvo, false); else atualizarQuadra(); });
+$('qMapa').addEventListener('change', (e) => { mapa.visible = e.target.checked; $('qLegenda').hidden = !e.target.checked; if (e.target.checked) calcularMapa(); });
+const QTIROS = { drive: [80, 0], topspin: [80, 1500], slice: [70, -1500] };
+document.querySelectorAll('[data-qtiro]').forEach(b => b.addEventListener('click', () => {
+  const [v, s] = QTIROS[b.dataset.qtiro]; $('qv').value = v; $('qs').value = s; mirar(alvo || ALVO_PADRAO); lancar();
+}));
+$('qLancar').addEventListener('click', lancar);
+function abrirQuadra(e) { if (e) e.preventDefault(); abrirAba('tab-quadra'); if (matchMedia('(max-width: 1000px)').matches) $('modelo').scrollIntoView({ behavior: reduz ? 'auto' : 'smooth' }); }
+$('irQuadra').addEventListener('click', abrirQuadra);
+document.querySelectorAll('[data-quadra]').forEach(b => b.addEventListener('click', abrirQuadra));
 
 // ---------- tema ----------
 function tema() { montarGrade(); if (raiz) pintar(); }
@@ -2624,25 +3306,28 @@ new MutationObserver(tema).observe(document.documentElement, { attributes: true,
 
 // ---------- laço (pausa quando o modelo não está visível) ----------
 let visivel = true;
-new IntersectionObserver(([e]) => { visivel = e.isIntersecting; }).observe(painel);
+new IntersectionObserver(([e]) => { visivel = e.isIntersecting; }).observe($('modelo'));
 const relogio = new THREE.Clock();
 function laco() {
   requestAnimationFrame(laco);
   const dt = Math.min(0.05, relogio.getDelta());
-  if (!visivel || $('p-3d').hidden) return;
+  if (!visivel || painelAtivo().hidden) return;
   if (anima) { anima.t = Math.min(1, anima.t + dt / 0.7); const s = anima.t * anima.t * (3 - 2 * anima.t);
     camera.position.lerpVectors(anima.p0, anima.p1, s); controls.target.lerpVectors(anima.a0, anima.a1, s); if (anima.t >= 1) anima = null; }
   if (raiz) {
-    if (explode !== explodeAlvo) { explode += Math.sign(explodeAlvo - explode) * Math.min(Math.abs(explodeAlvo - explode), dt / 0.6); aplicarExplosao(explode); }
+    if (modo === '3d' && explode !== explodeAlvo) { explode += Math.sign(explodeAlvo - explode) * Math.min(Math.abs(explodeAlvo - explode), dt / 0.6); aplicarExplosao(explode); }
     if ($('t-spin').checked && !reduz) {
       if (nos.roda_sup) nos.roda_sup.rotation.x += rpmSup / 60 * 2 * Math.PI * dt / 40;
       if (nos.roda_inf) nos.roda_inf.rotation.x -= rpmInf / 60 * 2 * Math.PI * dt / 40;
     }
     if (disparo) passo(dt);
+    if (voo) passoVoo(dt);
   }
+  passoZoom(dt);
   controls.update(); renderer.render(scene, camera);
 }
 montarGrade(); redimensionar(); irPara('iso', true); laco(); carregar().catch(falhou);
+if (location.hash === '#quadra') abrirAba('tab-quadra');
 </script>
 </body>
 </html>
