@@ -4,7 +4,7 @@ Máquina de treino com duas rodas de velocidade independente para controlar o sp
 
 **Apresentação do projeto:** https://brodwolf.github.io/lancador-tenis/
 
-![Demonstração do site](assets/img/lancador-demo.mp4)
+![Demonstração do site](assets/img/demo.mp4)
 
 ![Montagem completa](assets/img/perspectiva.webp)
 
