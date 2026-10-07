@@ -26,6 +26,8 @@
   --accent-ink: #ffffff;
   --ball: #cfe02c;         /* amarelo-óptico */
   --ball-ink: #1d2400;
+  --traj: #0a7f8e;          /* trajetória e 'dentro' no simulador: ciano, para não confundir com a bola */
+  --traj-ink: #ffffff;
   --warn: #b5470b;
   --warn-ink: #ffffff;
   --d-edge: #7e8a97; --d-grid: #c3ccd5; --d-muted: #9aa5b1; --d-tint: #dbe4ed;
@@ -37,7 +39,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0e141a; --surface: #141b23; --stage: #10171e; --ink: #e4e9ef; --muted: #97a3af; --line: #27313b;
-    --accent: #6ea6dc; --accent-ink: #0b1622; --ball: #d6e64a; --ball-ink: #1d2400; --warn: #f0894a; --warn-ink: #1a0d03;
+    --accent: #6ea6dc; --accent-ink: #0b1622; --ball: #d6e64a; --ball-ink: #1d2400; --traj: #45d6e3; --traj-ink: #04262b; --warn: #f0894a; --warn-ink: #1a0d03;
     --d-edge: #7c8894; --d-grid: #2e3842; --d-muted: #5d6975; --d-tint: #1c2733;
     --c-impresso: #f08a45; --c-laser: #64a3dc; --c-perfil: #9aa5b0; --c-comprado: #b9c2cc; --c-usinado: #c79b55;
     color-scheme: dark;
@@ -45,7 +47,7 @@
 }
 :root[data-theme="dark"] {
   --bg: #0e141a; --surface: #141b23; --stage: #10171e; --ink: #e4e9ef; --muted: #97a3af; --line: #27313b;
-  --accent: #6ea6dc; --accent-ink: #0b1622; --ball: #d6e64a; --ball-ink: #1d2400; --warn: #f0894a; --warn-ink: #1a0d03;
+  --accent: #6ea6dc; --accent-ink: #0b1622; --ball: #d6e64a; --ball-ink: #1d2400; --traj: #45d6e3; --traj-ink: #04262b; --warn: #f0894a; --warn-ink: #1a0d03;
   --d-edge: #7c8894; --d-grid: #2e3842; --d-muted: #5d6975; --d-tint: #1c2733;
   --c-impresso: #f08a45; --c-laser: #64a3dc; --c-perfil: #9aa5b0; --c-comprado: #b9c2cc; --c-usinado: #c79b55;
   color-scheme: dark;
@@ -210,7 +212,7 @@ footer { margin-top: 40px; font-size: 12.5px; color: var(--muted); }
 .placar { grid-column: 1 / -1; display: grid; gap: 6px; padding-bottom: 9px; border-bottom: 1px solid var(--line); font-size: 12.5px; line-height: 1.35; }
 .placar-topo { display: flex; align-items: center; gap: 6px 12px; flex-wrap: wrap; min-height: 26px; }
 .placar-topo .mono { font-size: 12px; color: var(--muted); }
-.selo { font: 600 13.5px/1 var(--f-display); letter-spacing: .03em; padding: 6px 10px; border-radius: 999px; background: var(--ball); color: var(--ball-ink); }
+.selo { font: 600 13.5px/1 var(--f-display); letter-spacing: .03em; padding: 6px 10px; border-radius: 999px; background: var(--traj); color: var(--traj-ink); }
 .selo.mal { background: var(--warn); color: var(--warn-ink); }
 .placar dl { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 24px; }
 .placar dl > div { white-space: nowrap; }
@@ -338,7 +340,7 @@ dialog.leitor::backdrop { background: rgba(8, 12, 16, .6); }
       <div class="controles qctl">
         <section class="placar" id="placar" aria-label="Resultado do lançamento" aria-live="polite">
           <div class="placar-topo"><span class="selo" id="qSelo">Calculando</span><span class="mono" id="qTempo"></span>
-            <span class="legenda-mapa" id="qLegenda" hidden><span><i style="background:#d6e64a"></i>dentro</span><span><i style="background:#f0894a"></i>fora</span><span><i style="background:#8b96a1"></i>rede ou curta</span></span>
+            <span class="legenda-mapa" id="qLegenda" hidden><span><i style="background:#38d6e4"></i>dentro</span><span><i style="background:#f0894a"></i>fora</span><span><i style="background:#8b96a1"></i>rede ou curta</span></span>
             <p class="nota" id="qNota">Toque na quadra do outro lado da rede para mirar.</p></div>
           <dl>
             <div><dt>1º quique, da rede</dt><dd id="qQ1">—</dd></div>
@@ -2974,7 +2976,7 @@ function rpms(t) { const vb = t.v / 3.6, w = t.s * 2 * Math.PI / 60, m = vb / ET
 const bolaGeo = new THREE.SphereGeometry(33.5, 32, 20), bolaMat = new THREE.MeshStandardMaterial({ color: 0xc9e12b, roughness: 0.9 });
 const N = 90;
 const trilha = new THREE.Line(new THREE.BufferGeometry().setFromPoints(Array.from({ length: N }, () => new THREE.Vector3())),
-  new THREE.LineBasicMaterial({ color: 0xb8c92a, transparent: true, opacity: 0.85 }));
+  new THREE.LineBasicMaterial({ color: 0x38d6e4, transparent: true, opacity: 0.9 }));
 trilha.frustumCulled = false; trilha.visible = false; scene.add(trilha);
 let disparo = null; const LENTO = 0.1;
 function ptTilt(u, v) { nos.tilt.updateMatrixWorld(true); return new THREE.Vector3(0, u, v).applyMatrix4(nos.tilt.matrixWorld); }
@@ -3010,7 +3012,7 @@ function passo(dt) {
 // ---------- quadra: simulação de onde a bola cai ----------
 const Qd = FIS.Q, MM = 1000;
 const quadra = new THREE.Group(); quadra.visible = false; scene.add(quadra);
-const COR_Q = { dentro: 0xd6e64a, fora: 0xf0894a, neutro: 0x8b96a1 };
+const COR_Q = { dentro: 0x38d6e4, fora: 0xf0894a, neutro: 0x8b96a1 };   // ciano: não se confunde com a bola amarela
 const PISO_COR = { rapida: [0x3b6d57, 0x2b5e91], saibro: [0xa65331, 0xb75e37] };
 const matFora = new THREE.MeshStandardMaterial({ roughness: 0.96 }), matDentro = new THREE.MeshStandardMaterial({ roughness: 0.92 });
 function chao(w, d, mat, y) { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), mat); m.rotation.x = -Math.PI / 2; m.position.y = y; quadra.add(m); return m; }
