@@ -1,10 +1,11 @@
 """Gera todos os arquivos de fabricação e visualização a partir de lancador.py.
 
   saida/
-    montagem/      lancador_montagem.step (montagem completa com cores e nomes)
+    montagem/      lancador_montagem.step e lancador_montagem_sem_carenagem.step
     impressao_3d/  STL + STEP de cada peça impressa
     corte_laser/   DXF de cada chapa (mm, escala 1:1) + pranchas.pdf
     usinagem/      STEP das peças de barra/torno
+    carenagem/     STEP dos painéis da carenagem (material a definir; base para molde)
     visualizador/  lancador.glb + pecas.json
     lista_de_pecas.csv
 """
@@ -24,7 +25,9 @@ import lancador as M
 AQUI = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(AQUI, "saida")
 
-QTD_FABRICAR = {}   # base -> quantidade a pedir/imprimir (se diferente do nº de instâncias no modelo)
+# base -> quantidade a pedir/imprimir, quando difere do nº de instâncias no modelo do visualizador
+# (o visualizador leva o cesto aberto e o dobrado ao mesmo tempo, então as dobradiças aparecem duas vezes)
+QTD_FABRICAR = {"dobradica_cesto": 4}
 
 
 def srgb_lin(c):
@@ -59,6 +62,7 @@ def pos_processar_glb(caminho):
     j = json.loads(b[20:20 + jlen])
     resto = b[20 + jlen:]
     metal = {k for k in ("perfil", "alu", "aco", "latao", "motor_sino")}
+    brilho = {k for k in ("led_vermelho", "led_amarelo", "led_verde")}
     lin = {k: tuple(srgb_lin(x) for x in (c.toTuple()[:3])) for k, c in M.COR.items()}
     for mat in j.get("materials", []):
         pbr = mat.setdefault("pbrMetallicRoughness", {})
@@ -69,6 +73,8 @@ def pos_processar_glb(caminho):
             pbr["metallicFactor"], pbr["roughnessFactor"] = 0.55, 0.38
         else:
             pbr["metallicFactor"], pbr["roughnessFactor"] = 0.0, 0.62
+        if nome in brilho:
+            mat["emissiveFactor"] = [c * 0.8 for c in bc[:3]]
         if bc[3] < 0.999:
             mat["alphaMode"] = "BLEND"
     js = json.dumps(j, separators=(",", ":")).encode()
@@ -131,13 +137,16 @@ def pranchas_pdf(itens, caminho):
 def exportar():
     if os.path.isdir(OUT):
         shutil.rmtree(OUT)
-    pastas = {k: os.path.join(OUT, k) for k in ("montagem", "impressao_3d", "corte_laser", "usinagem", "visualizador")}
+    pastas = {k: os.path.join(OUT, k) for k in ("montagem", "impressao_3d", "corte_laser", "usinagem", "carenagem", "visualizador")}
     for p in pastas.values():
         os.makedirs(p)
 
-    m = M.construir()
+    # montagem sem carenagem (para fabricar) e com carenagem (aparência)
+    M.construir(carenagem=False, cesto="aberto", bolas=False).export(os.path.join(pastas["montagem"], "lancador_montagem_sem_carenagem.step"))
+    M.construir(carenagem=True, cesto="aberto", bolas=False).export(os.path.join(pastas["montagem"], "lancador_montagem.step"))
+    # visualizador: as duas versões do cesto e a carenagem, que o site liga e desliga
+    m = M.construir(carenagem=True, cesto="ambos", bolas=True)
     print("montagem:", len(M.PECAS), "peças distintas")
-    m.export(os.path.join(pastas["montagem"], "lancador_montagem.step"))
     glb = os.path.join(pastas["visualizador"], "lancador.glb")
     m.export(glb, tolerance=0.25, angularTolerance=0.2)
     pos_processar_glb(glb)
@@ -152,13 +161,18 @@ def exportar():
     linhas = []
     for base, p in sorted(M.PECAS.items(), key=lambda kv: (kv[1]["cat"], kv[0])):
         arquivos = []
+        formas = p.get("variantes") or [p["shape"]]
         if p["cat"] == "impresso":
-            formas = p.get("variantes") or [p["shape"]]
             for i, f in enumerate(formas, 1):
                 suf = f"_{i}" if len(formas) > 1 else ""
                 stl = os.path.join(pastas["impressao_3d"], f"{base}{suf}.stl")
                 cq.exporters.export(f, stl, tolerance=0.02, angularTolerance=0.08)
                 cq.exporters.export(f, stl.replace(".stl", ".step"))
+                arquivos.append(os.path.relpath(stl, OUT))
+            if p.get("espelho_shape") is not None:          # cópias espelhadas (lado -x etc.)
+                stl = os.path.join(pastas["impressao_3d"], f"{base}_espelhada.stl")
+                cq.exporters.export(p["espelho_shape"], stl, tolerance=0.02, angularTolerance=0.08)
+                cq.exporters.export(p["espelho_shape"], stl.replace(".stl", ".step"))
                 arquivos.append(os.path.relpath(stl, OUT))
         elif p["cat"] == "laser":
             import re
@@ -169,7 +183,13 @@ def exportar():
             dxfs.append((base, p, dxf))
             arquivos.append(os.path.relpath(dxf, OUT))
         elif p["cat"] == "usinado":
-            st = os.path.join(pastas["usinagem"], f"{base}.step")
+            for i, f in enumerate(formas, 1):
+                suf = f"_{i}" if len(formas) > 1 else ""
+                st = os.path.join(pastas["usinagem"], f"{base}{suf}.step")
+                cq.exporters.export(f, st)
+                arquivos.append(os.path.relpath(st, OUT))
+        elif p["cat"] == "carenagem":
+            st = os.path.join(pastas["carenagem"], f"{base}.step")
             cq.exporters.export(p["shape"], st)
             arquivos.append(os.path.relpath(st, OUT))
         p["arquivos"] = arquivos
@@ -184,16 +204,16 @@ def exportar():
         w.writerow(["Categoria", "Peça", "Material", "Qtd no modelo", "Código", "Arquivo(s)"])
         w.writerows(linhas)
 
-    meta = {base: dict(label=p["label"], cat=M.CAT[p["cat"]], tipo=p["cat"], mat=p["mat"], qtd=p["qtd"],
+    meta = {base: dict(label=p["label"], cat=M.CAT[p["cat"]], tipo=p["cat"], mat=p["mat"], qtd=QTD_FABRICAR.get(base, p["qtd"]),
                        arquivos=p.get("arquivos", [])) for base, p in M.PECAS.items()}
-    params = dict(PAN_Y=M.PAN_Y, Z_PIVOT=M.Z_PIVOT, TILT_NUT=M.TILT_NUT, ACT_PIVOT_Z=M.ACT_PIVOT_Z,
-                  NIP=M.NIP, WC=M.WC, BALL_R=M.BALL_R, WHEEL_D=M.WHEEL_D)
+    params = dict(YA=M.YA, ZP=M.ZP, Z_PLAT=M.Z_PLAT, Z1=M.Z1, Z2=M.Z2, Z3=M.Z3, Z_BASE=M.Z_BASE, W=M.W, D=M.D,
+                  NIP=M.NIP, WC=M.WC, BALL_R=M.BALL_R, WHEEL_D=M.WHEEL_D, MANIVELA=list(M.MANIVELA), X_ATU=M.X_ATU,
+                  Z_FUSO_TILT=M.Z_FUSO_TILT, PAN_BRACO=M.PAN_BRACO, PAN_MAX=M.PAN_MAX, TILT_MIN=M.TILT_MIN,
+                  TILT_MAX=M.TILT_MAX, TILT_BUILD=15.0, CESTO_TOPO=M.Z3 + M.CESTO_H)
     with open(os.path.join(pastas["visualizador"], "pecas.json"), "w", encoding="utf-8") as f:
         json.dump(dict(pecas=meta, params=params), f, ensure_ascii=False)
-    shutil.copy(os.path.join(AQUI, "LEIAME.md"), os.path.join(OUT, "LEIAME.md"))
-    shutil.copy(os.path.join(AQUI, "lancador.py"), os.path.join(OUT, "lancador.py"))
-    shutil.copy(os.path.join(AQUI, "exportar.py"), os.path.join(OUT, "exportar.py"))
-    shutil.copy(os.path.join(AQUI, "verificar.py"), os.path.join(OUT, "verificar.py"))
+    for arq in ("LEIAME.md", "lancador.py", "exportar.py", "verificar.py"):
+        shutil.copy(os.path.join(AQUI, arq), os.path.join(OUT, arq))
     print("ok:", sum(len(fs) for _, _, fs in os.walk(OUT)), "arquivos")
 
 
