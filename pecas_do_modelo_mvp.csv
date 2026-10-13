@@ -1,0 +1,50 @@
+﻿Categoria;Peça;Material;Qtd;Código;Arquivo(s)
+Comprado pronto;Cantoneira de alumínio 40x40x3 x 60;Alumínio;2;cantoneira_garfo;
+Comprado pronto;Colar de trava Ø12;Aço;4;colar_12;
+Comprado pronto;Colar de trava Ø8;Aço;4;colar_8;
+Comprado pronto;Correia HTD 3M 9 mm fechada (600-3M-9 e 288-3M-9);Borracha / fibra;2;correia_htd;
+Comprado pronto;Espaçador entre placas M5 x 90;Alumínio;4;espacador_placas;
+Comprado pronto;"Rolamento lazy susan redondo Ø150 (6"")";Aço;1;lazy_susan;
+Comprado pronto;Mancal KFL001 (Ø12);Zamak / aço;4;mancal_kfl001;
+Comprado pronto;Mancal KFL08 (Ø8);Zamak / aço;2;mancal_kfl08;
+Comprado pronto;Microchave fim de curso (referência do giro);;1;microchave;
+Comprado pronto;NEMA17 com fuso Tr8x8 integrado 100 mm (giro);;1;motor_giro;
+Comprado pronto;Motor brushless outrunner 4250, 400-500 KV (eixo invertido);;2;motor_roda;
+Comprado pronto;"NEMA17 com fuso Tr8x2 integrado 100 mm (tilt; passo de 2 mm, não volta sozinho)";;1;motor_tilt;
+Comprado pronto;Parafuso M4 x 45 + porca autotravante;;12;parafuso_m4_roda;
+Comprado pronto;Pé de borracha Ø25 com parafuso M5 (embaixo de cada perna);;4;pe_borracha_m5;
+Comprado pronto;Pino do giro M6 x 30 (parafuso de ombro);;1;pino_giro;
+Comprado pronto;Pino da manivela: parafuso de ombro Ø6 x 6, M5 + porca;;1;pino_manivela;
+Comprado pronto;Polia HTD 3M 20 dentes, furo 5, 15 mm;Alumínio;2;polia_motor;
+Comprado pronto;Polia HTD 3M 20 dentes, furo 12, 15 mm;Alumínio;2;polia_roda;
+Comprado pronto;Sensor Hall A3144 (módulo);;2;sensor_hall;
+Comprado pronto;Servo rápido 20-25 kg·cm, ≤ 0,07 s/60° (tamanho padrão, como o DS3225);;1;servo;
+Comprado pronto;Trilho-guia da bola Ø8 x 215 (vareta de alumínio);Alumínio;2;trilho_guia;
+Impressão 3D;Banda de rodagem TPU Ø150 x 40;TPU 95A;2;banda_roda;banda_roda.stl
+Impressão 3D;Berço da bola;PETG;1;berco;berco.stl
+Impressão 3D;Bloco da porca do giro (rasgo para o pino);PETG;1;bloco_porca_giro;bloco_porca_giro.stl
+Impressão 3D;Bloco da porca do tilt (rasgo para o pino da manivela);PETG;1;bloco_porca_tilt;bloco_porca_tilt.stl
+Impressão 3D;Braço do empurrador;PETG + ponta TPU;1;braco_empurrador;braco_empurrador.stl
+Impressão 3D;Carenagem da roda de baixo;PETG / ASA;1;carenagem_roda_inf;carenagem_roda_inf.stl
+Impressão 3D;Carenagem da roda de cima;PETG / ASA;1;carenagem_roda_sup;carenagem_roda_sup.stl
+Impressão 3D;Disco de sinal (2 ímãs);PETG;2;disco_sinal;disco_sinal.stl
+Impressão 3D;Funil da cabeça (84x140 -> Ø78);PETG;1;funil_cabeca;funil_cabeca.stl
+Impressão 3D;Mancal da ponta do fuso do giro (rolamento 608);PETG;1;mancal_fuso_giro;mancal_fuso_giro.stl
+Impressão 3D;Núcleo da roda Ø134 x 32;PETG / ASA / PA-CF;2;nucleo_roda;nucleo_roda.stl
+Impressão 3D;Suporte do sensor Hall;PETG;2;suporte_hall;suporte_hall.stl
+Impressão 3D;Suporte do motor do giro;PETG;1;suporte_motor_giro;suporte_motor_giro.stl
+Impressão 3D;Suporte do motor do tilt (no garfo);PETG;1;suporte_motor_tilt;suporte_motor_tilt.stl
+Impressão 3D;Suporte do servo;PETG;1;suporte_servo;suporte_servo.stl
+Impressão 3D;Suporte dos trilhos;PETG;1;suporte_trilho;suporte_trilho.stl
+Impressão 3D;Tampa da correia da roda de baixo;PETG;1;tampa_correia_inf;tampa_correia_inf.stl
+Impressão 3D;Tampa da correia da roda de cima;PETG;1;tampa_correia_sup;tampa_correia_sup.stl
+Corte a laser;Base do andar do lançador (Al 4 mm);Alumínio 5052/6061, 4 mm;1;chapa_base_lancador;chapa_base_lancador_4mm.dxf
+Corte a laser;Disco de inércia Ø120 (aço 3 mm);Aço 1020, 3 mm;4;disco_inercia;disco_inercia_3mm.dxf
+Corte a laser;Garfo do tilt (Al 6 mm);Alumínio 6061, 6 mm;2;garfo;garfo_6mm.dxf
+Corte a laser;Manivela do tilt (Al 6 mm);Alumínio 6061, 6 mm;1;manivela_tilt;manivela_tilt_6mm.dxf
+Corte a laser;Placa lateral da cabeça (Al 6 mm);Alumínio 6061, 6 mm;2;placa_lateral;placa_lateral_6mm.dxf
+Corte a laser;Plataforma giratória (Al 4 mm);Alumínio 5052/6061, 4 mm;1;plataforma;plataforma_4mm.dxf
+Perfil de alumínio (cortado sob medida);Poste do andar de controle (perfil 20x20, 112 mm) · perna no MVP;Alumínio 20x20 canal 6;4;poste_base;
+Usinagem / barra cortada;Eixo da roda Ø12 x 134 com chato;Aço 1045 retificado;2;eixo_roda;eixo_roda.step
+Usinagem / barra cortada;"Semi-eixo do tilt Ø8 com chato no comprimento todo (lado +x 50 mm; lado -x 65 mm, rosca M4 na ponta)";Aço retificado;2;semi_eixo;semi_eixo_1.step semi_eixo_2.step
+Impressão 3D;Calibre do vão de 56 mm entre as rodas (ferramenta);PETG;1;calibre_vao_56mm;calibre_vao_56mm.stl

@@ -1,0 +1,404 @@
+{
+  "version": 1,
+  "author": "Lançador MVP",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-s3-devkitc-1",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-a4988",
+      "id": "drvGiro",
+      "top": -10,
+      "left": -230,
+      "rotate": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-a4988",
+      "id": "drvTilt",
+      "top": 150,
+      "left": -230,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "motGiro",
+      "top": -190,
+      "left": -470,
+      "attrs": {
+        "size": "17",
+        "arrow": "orange",
+        "value": "giro"
+      }
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "motTilt",
+      "top": 110,
+      "left": -470,
+      "attrs": {
+        "size": "17",
+        "arrow": "orange",
+        "value": "tilt"
+      }
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "escA",
+      "top": -200,
+      "left": 280,
+      "attrs": {
+        "hornColor": "#c62f28"
+      }
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "escB",
+      "top": -80,
+      "left": 280,
+      "attrs": {
+        "hornColor": "#c62f28"
+      }
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "empurrador",
+      "top": 40,
+      "left": 280,
+      "attrs": {
+        "hornColor": "#2563b8"
+      }
+    },
+    {
+      "type": "wokwi-relay-module",
+      "id": "k1",
+      "top": 180,
+      "left": 280,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "ledMot",
+      "top": 160,
+      "left": 460,
+      "attrs": {
+        "color": "orange",
+        "label": "+MOT"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rLed",
+      "top": 250,
+      "left": 440,
+      "rotate": 90,
+      "attrs": {
+        "value": "330"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "emerg",
+      "top": 290,
+      "left": 290,
+      "attrs": {
+        "color": "red",
+        "label": "EMERGÊNCIA",
+        "bounce": "0"
+      }
+    },
+    {
+      "type": "wokwi-slide-switch",
+      "id": "fim",
+      "top": 300,
+      "left": -190,
+      "attrs": {
+        "value": "0"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:TX",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "esp:4",
+      "escA:PWM",
+      "orange",
+      []
+    ],
+    [
+      "esp:5",
+      "escB:PWM",
+      "orange",
+      []
+    ],
+    [
+      "esp:12",
+      "empurrador:PWM",
+      "blue",
+      []
+    ],
+    [
+      "escA:V+",
+      "esp:5V",
+      "red",
+      []
+    ],
+    [
+      "escA:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "escB:V+",
+      "esp:5V",
+      "red",
+      []
+    ],
+    [
+      "escB:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "empurrador:V+",
+      "esp:5V",
+      "red",
+      []
+    ],
+    [
+      "empurrador:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "esp:15",
+      "drvGiro:STEP",
+      "green",
+      []
+    ],
+    [
+      "esp:16",
+      "drvGiro:DIR",
+      "violet",
+      []
+    ],
+    [
+      "esp:10",
+      "drvGiro:ENABLE",
+      "gray",
+      []
+    ],
+    [
+      "drvGiro:RESET",
+      "drvGiro:SLEEP",
+      "gray",
+      []
+    ],
+    [
+      "drvGiro:VDD",
+      "esp:3V3.1",
+      "red",
+      []
+    ],
+    [
+      "drvGiro:GND.1",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "drvGiro:MS1",
+      "esp:3V3.1",
+      "red",
+      []
+    ],
+    [
+      "drvGiro:MS2",
+      "esp:3V3.1",
+      "red",
+      []
+    ],
+    [
+      "esp:17",
+      "drvTilt:STEP",
+      "green",
+      []
+    ],
+    [
+      "esp:18",
+      "drvTilt:DIR",
+      "violet",
+      []
+    ],
+    [
+      "esp:10",
+      "drvTilt:ENABLE",
+      "gray",
+      []
+    ],
+    [
+      "drvTilt:RESET",
+      "drvTilt:SLEEP",
+      "gray",
+      []
+    ],
+    [
+      "drvTilt:VDD",
+      "esp:3V3.1",
+      "red",
+      []
+    ],
+    [
+      "drvTilt:GND.1",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "drvTilt:MS1",
+      "esp:3V3.1",
+      "red",
+      []
+    ],
+    [
+      "drvTilt:MS2",
+      "esp:3V3.1",
+      "red",
+      []
+    ],
+    [
+      "drvGiro:1B",
+      "motGiro:A-",
+      "black",
+      []
+    ],
+    [
+      "drvGiro:1A",
+      "motGiro:A+",
+      "green",
+      []
+    ],
+    [
+      "drvGiro:2A",
+      "motGiro:B+",
+      "blue",
+      []
+    ],
+    [
+      "drvGiro:2B",
+      "motGiro:B-",
+      "red",
+      []
+    ],
+    [
+      "drvTilt:1B",
+      "motTilt:A-",
+      "black",
+      []
+    ],
+    [
+      "drvTilt:1A",
+      "motTilt:A+",
+      "green",
+      []
+    ],
+    [
+      "drvTilt:2A",
+      "motTilt:B+",
+      "blue",
+      []
+    ],
+    [
+      "drvTilt:2B",
+      "motTilt:B-",
+      "red",
+      []
+    ],
+    [
+      "k1:VCC",
+      "esp:5V",
+      "red",
+      []
+    ],
+    [
+      "k1:GND",
+      "esp:GND.3",
+      "black",
+      []
+    ],
+    [
+      "k1:IN",
+      "esp:42",
+      "gold",
+      []
+    ],
+    [
+      "k1:COM",
+      "esp:5V",
+      "red",
+      []
+    ],
+    [
+      "k1:NO",
+      "ledMot:A",
+      "orange",
+      []
+    ],
+    [
+      "ledMot:C",
+      "rLed:1",
+      "black",
+      []
+    ],
+    [
+      "rLed:2",
+      "esp:GND.3",
+      "black",
+      []
+    ],
+    [
+      "emerg:1.l",
+      "esp:41",
+      "red",
+      []
+    ],
+    [
+      "emerg:2.l",
+      "esp:GND.4",
+      "black",
+      []
+    ],
+    [
+      "fim:2",
+      "esp:13",
+      "gold",
+      []
+    ],
+    [
+      "fim:1",
+      "esp:GND.4",
+      "black",
+      []
+    ]
+  ],
+  "dependencies": {}
+}

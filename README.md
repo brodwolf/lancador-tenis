@@ -1,58 +1,65 @@
-# Lançador de Bolas de Tênis
+# Lançador de bolas · MVP de bancada
 
-Máquina de treino portátil, montada em três andares que se separam. Tem duas rodas de velocidade independente para controlar o spin, cabeça com giro e inclinação motorizados, cesto de tela dobrável e baterias Makita 18 V. Projeto aberto, pensado para ser construído com impressão 3D, corte a laser e peças de prateleira.
+Esta branch tem só o que entra no MVP de bancada: a **base do andar do lançador** (alumínio 4 mm), o **giro**, a **inclinação** e a **cabeça de lançamento**. A alimentação vem de uma fonte de bancada, os comandos vêm do computador pelo USB e as bolas entram à mão no berço.
 
-**Apresentação do projeto:** https://brodwolf.github.io/lancador-tenis/
+**Nada aqui é provisório.** Cada peça impressa, cortada, usinada ou comprada, cada conector e cada rabicho de fio desta lista é da máquina completa e continua nela quando o resto chegar. Só três itens são de bancada e estão marcados assim na lista: a fonte, o cabo dela com plugues banana e a caixa de botoeira da emergência.
 
-![Demonstração do site](assets/img/demo.mp4)
+![MVP montado](modelo/mvp_perspectiva.webp)
 
-![Montagem completa](assets/img/perspectiva.webp)
+O guia completo, com os desenhos da elétrica e todas as tabelas, está em [`guia_mvp.html`](guia_mvp.html) (abra no navegador).
 
-| Especificação | Valor |
+## A chapa sozinha na mesa aguenta?
+
+**Aguenta o peso com folga, mas não deve ficar deitada direto na mesa.**
+
+- **Peso:** o MVP tem ~9,8 kg. A chapa de 4 mm, apoiada nos 4 cantos, flete menos de 0,5 mm com isso.
+- **Por que não deitada:** por baixo da chapa ficam as porcas do lazy susan, do suporte do motor do giro e do mancal do fuso. A chapa ficaria apoiada nelas, balançando.
+- **Como apoiar:** use os 4 postes do andar de controle (perfil 20×20, 112 mm) como pernas, com um pé de borracha M5 embaixo de cada um. São os mesmos postes que depois ligam o andar de controle ao do lançador: nada se perde.
+- **Estabilidade:** o centro de massa fica perto do meio da chapa, a 27–32 cm da mesa, dentro do retângulo de 270 × 380 mm das pernas. A máquina não tomba nem com a cabeça no giro máximo.
+- **Vibração:** com as rodas a milhares de rpm ela pode "andar" na mesa. Se andar, troque os pés por uma tábua de MDF de 18 mm (~450 × 350 mm) parafusada nas pernas (M5) e prenda a tábua na mesa com 2 grampos C. É o único apoio de bancada sugerido.
+
+## Pastas
+
+| Pasta | O que tem |
 | --- | --- |
-| Velocidade da bola | 30–120 km/h |
-| Spin | −2.500 rpm (slice) a +3.000 rpm (topspin) |
-| Giro / inclinação | ±12,5° / 0° a +30° (máquina no centro da linha de fundo) |
-| Cesto | Tela dobrável, ~120 bolas |
-| Autonomia | 2,3–4,5 h com 2 baterias Makita 5,0 Ah |
-| Dimensões | 32 × 43 cm de base; ~82 cm de altura com o cesto dobrado, 104,5 cm aberto; ~20 kg sem carenagem |
-| Carenagem | Material a definir; só STEP de referência |
-| Custo estimado | R$ 4,6–8,1 mil, sem baterias e sem carenagem |
+| [`1-imprimir/`](1-imprimir/) | STL e STEP das 19 peças impressas, com orientação, configuração, massa e tempo de cada uma |
+| [`2-cortar/`](2-cortar/) | DXF 1:1 das 6 chapas + pranchas em PDF para o serviço de corte a laser |
+| [`3-usinar/`](3-usinar/) | STEP dos eixos e o que fazer em cada um |
+| [`4-comprar/`](4-comprar/) | Lista unificada (`lista_mvp.csv`): quantas peças iguais comprar de cada item |
+| [`5-eletrica/`](5-eletrica/) | Esquemas de potência e sinais, placa de controle, bancada, cabos e a simulação no Wokwi |
+| [`6-firmware/`](6-firmware/) | Programa do ESP32 com comandos pelo monitor serial |
+| [`7-montar/`](7-montar/) | Passo a passo da montagem mecânica, da elétrica e dos primeiros testes |
+| [`modelo/`](modelo/) | Montagem em STEP, GLB e imagens |
+| [`cad/`](cad/) | Código CadQuery que gera tudo isso de novo |
 
-## O que tem aqui
+## Ordem sugerida
 
-| Pasta | Conteúdo |
-| --- | --- |
-| `index.html`, `assets/` | Página de apresentação: modelo 3D interativo (com e sem carenagem) e simulação na quadra com vento (GitHub Pages) |
-| `PROJETO.md` | Memorial técnico em Markdown (sem preços e sem próximos passos) |
-| `cad/montagem/` | Montagem em STEP com e sem carenagem (Fusion 360, FreeCAD, Onshape, SolidWorks) |
-| `cad/impressao_3d/` | STL e STEP das peças impressas (as `_espelhada` são a cópia do outro lado) |
-| `cad/corte_laser/` | DXF das 10 chapas (mm, 1:1) e pranchas em PDF |
-| `cad/carenagem/` | STEP dos painéis externos, material a definir |
-| `cad/usinagem/` | Eixos em STEP |
-| `cad/lista_de_pecas.csv` | Todas as peças com categoria, material e quantidade |
-| `cad/lancador.py` | Modelo paramétrico em CadQuery |
+1. **Comprar** o que demora: motores 4250, ESCs, NEMA17 com fuso, servo, lazy susan, mancais, polias e correias. A lista está em `4-comprar/`.
+2. **Imprimir** começando pelos núcleos das rodas (as peças mais longas). Total ≈ 1,37 kg de PETG e 0,18 kg de TPU, 79–121 h de impressora.
+3. **Mandar cortar** as chapas e **usinar** os eixos enquanto imprime. Confira antes as furações das peças compradas (`2-cortar/LEIAME.md`).
+4. **Montar a elétrica na bancada**, sem a mecânica: fonte, barramentos, bucks, placa, um motor por vez. Teste antes no Wokwi (`5-eletrica/wokwi/`).
+5. **Montar a mecânica** (`7-montar/`): base e pernas, giro, garfos, cabeça.
+6. **Juntar as duas** pelos conectores X1–X6 e fazer os testes da `7-montar/`, com as rodas em rotação baixa primeiro.
 
-A versão anterior, uma estrutura única de 55 × 45 × 120 cm, está no branch [`v1`](../../tree/v1).
+## O que fica para depois
 
-## Gerar os arquivos de novo
+- Baterias Makita, berços, chave anti-faísca e o segundo diodo ideal (o da bateria B)
+- Andar de controle (o resto dele) e andar do alimentador, cesto e carenagem
+- Controle de 433 MHz, semáforo, tela, buzzer, sensor de bola e INA226
+- Terceiro TMC2209 e motor do agitador
+- Suporte dos conectores entre andares (vai ser redesenhado para os 6 conectores) e painel traseiro
 
-```
-pip install cadquery ezdxf matplotlib
-cd cad
-python3 exportar.py      # recria STEP, STL, DXF, GLB e a lista de peças em cad/saida/
-python3 verificar.py     # confere folgas em 18 posições de giro e inclinação, o caminho da bola e todas as peças entre si
-```
+Tudo isso entra sem mudar nada do MVP: os pinos do ESP32, os conectores, os rabichos e os fusíveis já são os da máquina completa.
 
-Os parâmetros principais ficam no topo de `cad/lancador.py`: tamanho da carenagem, alturas dos andares, linha da bola, rodas e vão, motores e faixas de giro e inclinação.
+## O que o MVP mudou no projeto
 
-## Antes de mandar cortar
+Ao montar a lista do MVP apareceram correções que valem para a máquina toda. Elas já estão nos arquivos desta branch; a branch `main` ainda não tem:
 
-Os furos de peças compradas seguem cotas de catálogo. Confira com a peça na mão:
-
-- KFL001: 48 mm entre furos, M6
-- KFL08: 37 mm entre furos, M4
-- lazy susan Ø150: a furação varia por fabricante
-- X-mount do motor 4250
-
-Detalhes em `cad/LEIAME.md`.
+- **Suporte do motor do tilt:** os furos M4 saíram de dentro do furo de Ø30 do garfo e foram para 60 mm abaixo do fuso; o garfo ganhou os furos que faltavam.
+- **Berço:** as barras passantes viraram 4 insertos M4 laterais, porque o braço do empurrador cruza o meio do berço.
+- **Blocos das porcas:** ganharam 4 furos-guia Ø2,5 em Ø16 para a flange da porca de latão Tr8.
+- **Pivô do tilt:** furo em D nas placas laterais e chato no comprimento todo dos dois semi-eixos: antes o torque da manivela chegava à cabeça só pelo atrito dos colares.
+- **Semi-eixos:** os dois agora são exportados (antes só saía um STEP); a ponta do de 65 mm leva rosca M4.
+- **Eixo da roda:** o nome no CAD dizia 140 mm, mas o modelo tem 134 mm; o nome foi corrigido.
+- **ESC:** freio desligado: com fonte ou diodos ideais, a energia da frenagem não tem para onde ir e sobe a tensão do barramento.
+- **Relé K1:** IRLZ44N (TO-220) no lugar do AO3400, mais fácil de soldar em placa perfurada.

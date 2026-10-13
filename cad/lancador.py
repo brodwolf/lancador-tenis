@@ -459,8 +459,7 @@ SERVO_EIXO = (-45.0, -82.0)     # eixo do servo do empurrador (u, v)
 
 def ch_lateral():
     """Placa lateral da cabeça (u=frente, v=cima, origem no pivô). A mesma peça nos dois lados."""
-    furos = [(0, 0, 8.1),
-             (NIP, WC, 16), (NIP, WC - 24, 7), (NIP, WC + 24, 7)]
+    furos = [(NIP, WC, 16), (NIP, WC - 24, 7), (NIP, WC + 24, 7)]
     furos += [(u, v, 5.5) for u, v in ESPACADORES]
     fa, oa = furos_motor(*MOT_A, (NIP, WC))
     fb, ob = furos_motor(*MOT_B, (NIP, -WC))
@@ -473,7 +472,8 @@ def ch_lateral():
     furos += [(NIP - 24, WC, 3.4), (NIP - 24, -WC, 3.4)]           # suportes dos sensores Hall
     furos += [(u, v, 3.4) for lado in (1, -1) for u, v in bossas_tampa(lado)]            # tampas das correias
     obl = oa + ob + [(NIP, -WC, 24, 16, 90), (NIP, -WC - 24, 15, 7, 90), (NIP, -WC + 24, 15, 7, 90)]
-    return chapa(poly(placa_lateral_pts()), PL_T, furos, obl)
+    # pivô: furo em D para o semi-eixo Ø8 com chato de 7 mm (o torque do tilt passa da manivela para a cabeça pelo chato)
+    return chapa(poly(placa_lateral_pts()), PL_T, furos, obl).cut(furo_d8(PL_T))
 
 
 def ch_garfo():
@@ -481,17 +481,23 @@ def ch_garfo():
     h = ZP - Z_PLAT        # 205
     pts = casco(circulos([(0, h, 30), (-26, 4, 4), (26, 4, 4)], 40)) + [(-30, 0), (30, 0)]
     s = poly(casco(pts)).extrude(YOKE_T)
-    for x, y, d in [(0, h, 12), (0, h - 18.5, 4.5), (0, h + 18.5, 4.5), (-18, 22, 4.5), (18, 22, 4.5), (0, 110, 30)]:
+    y_sup = Z_FUSO_TILT - 60 - Z_PLAT          # furos do suporte do motor do tilt (só usados no garfo -x)
+    for x, y, d in [(0, h, 12), (0, h - 18.5, 4.5), (0, h + 18.5, 4.5), (-18, 22, 4.5), (18, 22, 4.5), (0, 110, 30),
+                    (0, y_sup, 4.5), (20, y_sup, 4.5)]:
         s = s.cut(cyl_z(d / 2, -1, YOKE_T + 1, x, y))
     return s
+
+
+def furo_d8(t):
+    """Furo em D para o semi-eixo Ø8 com chato (7 mm entre a face plana e o lado oposto)."""
+    return cq.Workplane("XY").circle(4.05).extrude(t).intersect(cq.Workplane("XY").center(-0.5, 0).rect(7.1, 9).extrude(t))
 
 
 def ch_manivela():
     """Manivela presa no semi-eixo -x por furo em D (eixo Ø8 com chato de 7 mm); o pino da ponta entra na porca do tilt."""
     pts = casco(circulos([(0, 0, 14), (MANIVELA[0], MANIVELA[1], 11)], 30))
     s = chapa(poly(pts), 6.0, [(MANIVELA[0], MANIVELA[1], 5.5)])
-    d = cq.Workplane("XY").circle(4.05).extrude(6).intersect(cq.Workplane("XY").center(-0.5, 0).rect(7.1, 9).extrude(6))
-    return s.cut(d)
+    return s.cut(furo_d8(6.0))
 
 
 def furo_d(t):
@@ -560,7 +566,9 @@ def imp_carenagem_roda(lado):
 def imp_berco():
     s = box(-45, 45, -45, 32, -55, -33)
     s = s.cut(cq.Workplane("XZ", origin=(0, 40, 0)).circle(37).extrude(90))
-    s = s.cut(cyl_x(2.25, -46, 46, -25, -44)).cut(cyl_x(2.25, -46, 46, 25, -44))
+    # fixação: insertos M4 de 8 mm nas duas faces (o braço do empurrador cruza o meio, então não há barra passante)
+    for u in (-25, 25):
+        s = s.cut(cyl_x(2.8, -46, -37, u, -44)).cut(cyl_x(2.8, 37, 46, u, -44))
     s = s.cut(box(10, 17, -50, 2, -56, -32))                       # rasgo por onde passa o braço do empurrador
     return s.cut(cyl_y(4.1, -50, 40, x=20, z=-31.7)).cut(cyl_y(4.1, -50, 40, x=-20, z=-31.7))
 
@@ -637,11 +645,23 @@ def imp_suporte_hall():
     return s.cut(cyl_x(1.7, -1, 19, -24, 0))
 
 
+def furos_flange_porca():
+    """Furos-guia Ø2,5 (parafuso M3 que abre rosca no PETG) para a flange da porca de latão Tr8: 4 furos em Ø16, 10 mm de fundo."""
+    r = 8 / math.sqrt(2)
+    f = None
+    for dx in (-r, r):
+        for dz in (-r, r):
+            c = cyl_y(1.25, 2, 13, dx, dz)
+            f = c if f is None else f.union(c)
+    return f
+
+
 def imp_bloco_porca_tilt():
     """Corre no fuso do tilt (ao longo de u). O rasgo vertical, só na face +x (do lado da manivela), recebe o pino
     da ponta da manivela sem chegar no fuso."""
     s = box(-14, 14, -12, 12, -14, 14).edges("|Y").fillet(3)
     s = s.cut(cyl_y(5.2, -13, 13, 0, 0))
+    s = s.cut(furos_flange_porca())
     return s.cut(box(8, 15, -3.2, 3.2, -7, 7))
 
 
@@ -660,7 +680,7 @@ def imp_suporte_motor_tilt():
     s = s.cut(cyl_y(11.5, U_MOTOR_TILT - 7, U_MOTOR_TILT + 1, X_ATU, zf))
     s = s.cut(cq.Workplane("XZ", origin=(0, U_MOTOR_TILT + 1, 0)).pushPoints(
         [(X_ATU + dx, zf + dz) for dx in (-15.5, 15.5) for dz in (-15.5, 15.5)]).circle(1.7).extrude(8))
-    return s.cut(cyl_x(2.25, xg - 7, xg + 1, 0, zf - 45)).cut(cyl_x(2.25, xg - 7, xg + 1, 25, zf - 45))
+    return s.cut(cyl_x(2.25, xg - 7, xg + 1, 0, zf - 60)).cut(cyl_x(2.25, xg - 7, xg + 1, 20, zf - 60))   # M4 no garfo
 
 
 def imp_suporte_motor_giro():
@@ -679,6 +699,7 @@ def imp_bloco_porca_giro():
     """Corre no fuso do giro; o rasgo de baixo (ao longo de x) recebe o pino da plataforma."""
     s = box(-14, 14, -12, 12, -16, 12)
     s = s.cut(cyl_y(5.2, -13, 13, 0, 0))
+    s = s.cut(furos_flange_porca())
     return s.cut(cq.Workplane("XY", origin=(0, 0, -17)).slot2D(14, 6.4, 0).extrude(9))
 
 
@@ -973,7 +994,7 @@ def montar_roda(a, lado):
     reg("nucleo_roda", "Núcleo da roda Ø134 x 32", "impresso", "PETG / ASA / PA-CF")
     reg("banda_roda", "Banda de rodagem TPU Ø150 x 40", "impresso", "TPU 95A")
     reg("disco_inercia", "Disco de inércia Ø120 (aço 3 mm)", "laser", "Aço 1020, 3 mm")
-    reg("eixo_roda", "Eixo da roda Ø12 x 140 com chato", "usinado", "Aço 1045 retificado")
+    reg("eixo_roda", "Eixo da roda Ø12 x 134 com chato", "usinado", "Aço 1045 retificado")
     reg("colar_12", "Colar de trava Ø12", "comprado", "Aço")
     reg("polia_roda", "Polia HTD 3M 20 dentes, furo 12, 15 mm", "comprado", "Alumínio")
     reg("disco_sinal", "Disco de sinal (2 ímãs)", "impresso", "PETG")
@@ -1047,10 +1068,10 @@ def montar_tilt(a):
         put(a, sup, "suporte_hall", COR["petg"], loc)
         put(a, sen, "sensor_hall", COR["preto"], loc, label="Sensor Hall A3144 (módulo)", cat="comprado")
     # pivô: semi-eixos (o de -x leva a manivela) e colares
-    reg("semi_eixo", "Semi-eixo do tilt Ø8 (lado +x 50 mm; lado -x 65 mm com chato na ponta)", "usinado", "Aço retificado")
+    reg("semi_eixo", "Semi-eixo do tilt Ø8 com chato no comprimento todo (lado +x 50 mm; lado -x 65 mm, rosca M4 na ponta)", "usinado", "Aço retificado")
     reg("colar_8", "Colar de trava Ø8", "comprado", "Aço")
-    put(a, cyl_x(4, 37, 87), "semi_eixo", COR["aco"])
-    put(a, cyl_x(4, X_MAN - 2, -37).cut(box(X_MAN - 3, X_MAN + 8, 3.05, 5, -5, 5)), "semi_eixo", COR["aco"], variante=True)
+    put(a, cyl_x(4, 37, 87).cut(box(36, 88, 3.05, 5, -5, 5)), "semi_eixo", COR["aco"], variante=True)
+    put(a, cyl_x(4, X_MAN - 2, -37).cut(box(X_MAN - 3, -36, 3.05, 5, -5, 5)), "semi_eixo", COR["aco"], variante=True)
     for xa, xb in ((36, 45), (51, 60), (-45, -36), (-60, -51)):
         put(a, tube_x(8, 4, xa, xb), "colar_8", COR["aco"])
     reg("manivela_tilt", "Manivela do tilt (Al 6 mm)", "laser", "Alumínio 6061, 6 mm")
@@ -1121,11 +1142,29 @@ def montar_pan(a, tilt_deg=0.0):
     a.add(tl)
 
 
-def montar_lancador(a, pan_deg, tilt_deg):
+def montar_base_giro(a, pan_deg):
+    """Base do andar do lançador, rolamento do giro e acionamento do giro (a parte fixa). Usada também no MVP."""
     reg("chapa_base_lancador", "Base do andar do lançador (Al 4 mm)", "laser", "Alumínio 5052/6061, 4 mm")
     put(a, ch_base_lancador(), "chapa_base_lancador", COR["alu"], tr(0, 0, Z1))
     put(a, tube_z(75, 40, Z1 + T_BASE_LANC, Z1 + T_BASE_LANC + LAZY_H, 0, YA), "lazy_susan", COR["aco"],
         label="Rolamento lazy susan redondo Ø150 (6\")", cat="comprado", mat="Aço")
+    # acionamento do giro: NEMA17 com fuso, deitado ao longo de y no lado +x; porca com rasgo no pino da plataforma
+    reg("motor_giro", "NEMA17 com fuso Tr8x8 integrado 100 mm (giro)", "comprado", "")
+    lm = ploc((PAN_BRACO, Y_MOTOR_GIRO, Z_FUSO_PAN), (1, 0, 0), (0, 1, 0))
+    put(a, nema17(40, 0.1), "motor_giro", COR["motor"], lm)
+    put(a, cyl_y(4, Y_MOTOR_GIRO + 2, Y_MOTOR_GIRO + 100, x=PAN_BRACO, z=Z_FUSO_PAN), "fuso_giro", COR["aco"], label="Fuso Tr8x8 (parte do motor)", cat="visual")
+    put(a, imp_suporte_motor_giro(), "suporte_motor_giro", COR["petg"], tr(PAN_BRACO, Y_MOTOR_GIRO, Z1 + T_BASE_LANC),
+        label="Suporte do motor do giro", cat="impresso", mat="PETG")
+    put(a, imp_mancal_fuso(), "mancal_fuso_giro", COR["petg"], tr(PAN_BRACO, Y_MANCAL_GIRO, Z1 + T_BASE_LANC),
+        label="Mancal da ponta do fuso do giro (rolamento 608)", cat="impresso", mat="PETG")
+    put(a, imp_bloco_porca_giro(), "bloco_porca_giro", COR["petg_laranja"], tr(PAN_BRACO, YA + PAN_BRACO * math.sin(math.radians(pan_deg)), Z_FUSO_PAN),
+        label="Bloco da porca do giro (rasgo para o pino)", cat="impresso", mat="PETG")
+    put(a, box(PAN_BRACO + 16, PAN_BRACO + 36, YA - 30, YA - 10, Z1 + T_BASE_LANC, Z1 + T_BASE_LANC + 12), "microchave", COR["preto"],
+        label="Microchave fim de curso (referência do giro)", cat="comprado")
+
+
+def montar_lancador(a, pan_deg, tilt_deg):
+    montar_base_giro(a, pan_deg)
     zp0, zp1 = Z1 + T_BASE_LANC, Z2
     postes(a, zp0, zp1, "poste_lancador", f"Poste do andar do lançador (perfil 20x20, {zp1 - zp0:.0f} mm)")
     # quadro do topo (perfis 20x20) e cantoneiras
@@ -1140,19 +1179,6 @@ def montar_lancador(a, pan_deg, tilt_deg):
     for sx in (-1, 1):
         for sy in (-1, 1):
             put(a, box(-9, 9, -9, 9, 0, 18), "cantoneira_2020", COR["alu"], tr(sx * (PX - 19), sy * (PY - 19), Z2 - P - 18))
-    # acionamento do giro: NEMA17 com fuso, deitado ao longo de y no lado +x; porca com rasgo no pino da plataforma
-    reg("motor_giro", "NEMA17 com fuso Tr8x8 integrado 100 mm (giro)", "comprado", "")
-    lm = ploc((PAN_BRACO, Y_MOTOR_GIRO, Z_FUSO_PAN), (1, 0, 0), (0, 1, 0))
-    put(a, nema17(40, 0.1), "motor_giro", COR["motor"], lm)
-    put(a, cyl_y(4, Y_MOTOR_GIRO + 2, Y_MOTOR_GIRO + 100, x=PAN_BRACO, z=Z_FUSO_PAN), "fuso_giro", COR["aco"], label="Fuso Tr8x8 (parte do motor)", cat="visual")
-    put(a, imp_suporte_motor_giro(), "suporte_motor_giro", COR["petg"], tr(PAN_BRACO, Y_MOTOR_GIRO, Z1 + T_BASE_LANC),
-        label="Suporte do motor do giro", cat="impresso", mat="PETG")
-    put(a, imp_mancal_fuso(), "mancal_fuso_giro", COR["petg"], tr(PAN_BRACO, Y_MANCAL_GIRO, Z1 + T_BASE_LANC),
-        label="Mancal da ponta do fuso do giro (rolamento 608)", cat="impresso", mat="PETG")
-    put(a, imp_bloco_porca_giro(), "bloco_porca_giro", COR["petg_laranja"], tr(PAN_BRACO, YA + PAN_BRACO * math.sin(math.radians(pan_deg)), Z_FUSO_PAN),
-        label="Bloco da porca do giro (rasgo para o pino)", cat="impresso", mat="PETG")
-    put(a, box(PAN_BRACO + 16, PAN_BRACO + 36, YA - 30, YA - 10, Z1 + T_BASE_LANC, Z1 + T_BASE_LANC + 12), "microchave", COR["preto"],
-        label="Microchave fim de curso (referência do giro)", cat="comprado")
     # painel traseiro: tela 3,5", liga/desliga e emergência
     reg("painel_traseiro", "Painel traseiro (tela, liga/desliga, emergência)", "impresso", "PETG / ASA")
     yp = -PY - P / 2 + 2
